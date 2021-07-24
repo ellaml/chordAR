@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart' as appColors;
+import '../app_colors.dart' as appColors;
 
 class MenuButton extends StatelessWidget {
   final String buttonLabel;

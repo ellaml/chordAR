@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'main_menu.dart';
-import 'settings_screen.dart';
+import 'main_menu/main_menu.dart';
+import 'settings/settings_screen.dart';
 import 'app_colors.dart' as appColors;
 
 void main() => runApp(MyApp());

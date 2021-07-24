@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'menu_button.dart';
-import 'chord_bank_screen.dart';
-import 'progressions_screen.dart';
-import 'live_mode_screen.dart';
-import 'app_colors.dart' as appColors;
+import '../chord_bank/chord_bank_screen.dart';
+import '../progressions/progressions_screen.dart';
+import '../live_mode/live_mode_screen.dart';
+import '../app_colors.dart' as appColors;
 class MainMenu extends StatelessWidget {
 
 
