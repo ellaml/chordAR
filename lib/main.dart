@@ -9,6 +9,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+    // Define the default brightness and colors.
+    brightness: Brightness.dark,
+    accentColor: Colors.white,
+    primaryColor: Colors.purple[400],
+    backgroundColor: Color(0xFF2E2D3B),
+    // Define the default font family.
+    dialogBackgroundColor: Color(0xFF2E2D3B),
+    scaffoldBackgroundColor: Color(0xFF2E2D3B),
+    fontFamily: 'Segoe UI',
+
+    // Define the default TextTheme. Use this to specify the default
+    // text styling for headlines, titles, bodies of text, and more.
+    textTheme: const TextTheme(
+      headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+      headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+      bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+    ),
+  ),
       home: HomePage(),
     );
   }

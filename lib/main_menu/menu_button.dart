@@ -8,7 +8,7 @@ class MenuButton extends StatelessWidget {
 
   void changeScreen(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(
-      builder: (_) {
+      builder: (context) {
         return this.route;
       },
     ));

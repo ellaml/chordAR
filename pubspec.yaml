@@ -24,14 +24,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_focus_watcher: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -51,6 +52,44 @@ flutter:
      - assets/icons/process64.png
      - assets/icons/camera64.png
      - assets/icons/settings-purple32.png
+     - assets/icons/back-purple32.png
+     - assets/icons/left-arrow.png
+     - assets/icons/right-arrow.png
+     - assets/icons/glass64.png
+     - assets/chords/A.png
+     - assets/chords/A7.png
+     - assets/chords/Ab.png
+     - assets/chords/Am.png
+     - assets/chords/B.png
+     - assets/chords/B7.png
+     - assets/chords/Bb.png
+     - assets/chords/Bb7.png
+     - assets/chords/Bbm.png
+     - assets/chords/Bm.png
+     - assets/chords/C.png
+     - assets/chords/C#m.png
+     - assets/chords/C7.png
+     - assets/chords/Cm.png
+     - assets/chords/D.png
+     - assets/chords/D7.png
+     - assets/chords/Db.png
+     - assets/chords/Dm.png
+     - assets/chords/E flat.png
+     - assets/chords/E.png
+     - assets/chords/E7.png
+     - assets/chords/Eb7.png
+     - assets/chords/Em.png
+     - assets/chords/Empty diagram.png
+     - assets/chords/F.png
+     - assets/chords/F#.png
+     - assets/chords/F#7.png
+     - assets/chords/F#m.png
+     - assets/chords/F7.png
+     - assets/chords/Fm.png
+     - assets/chords/G.png
+     - assets/chords/G#m.png
+     - assets/chords/G7.png
+     - assets/chords/Gm.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

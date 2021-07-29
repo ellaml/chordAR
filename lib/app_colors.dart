@@ -4,3 +4,4 @@
   const borderPurple = const Color(0xFFC23EE2);
   const lightPurpleShadow = const Color(0xFFE5C4E9);
   const buttonText = const Color(0xFFCFCFCF);
+  const buttonBackground = const Color(0x00FFFFFF);
