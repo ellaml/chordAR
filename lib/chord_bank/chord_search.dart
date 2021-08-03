@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'search_box.dart';
+import '../search_box.dart';
 import '../chord_names.dart' as chordNames;
 
 class ChordSearch extends StatefulWidget {

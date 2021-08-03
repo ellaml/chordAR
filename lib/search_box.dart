@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'models/chord.dart';
 
 class SearchBox extends StatefulWidget {
   final Function updateChord;
@@ -8,52 +9,6 @@ class SearchBox extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _SearchBoxState();
-  }
-}
-
-class ChordOption {
-  final String name;
-
-  ChordOption(this.name);
-
-  static List<ChordOption> getChordOptions(String query) {
-    return [
-      'A',
-      'A7',
-      'Ab',
-      'Am',
-      'B',
-      'B7',
-      'Bb7',
-      'Bbm',
-      'Bm',
-      'C',
-      'C#m',
-      'C7',
-      'Cm',
-      'D',
-      'D7',
-      'Db',
-      'Dm',
-      'E flat',
-      'E',
-      'E7',
-      'Eb7',
-      'Em',
-      'F',
-      'F#',
-      'F#m',
-      'F7',
-      'Fm',
-      'G',
-      'F#m',
-      'G7',
-      'Gm'
-    ]
-        .where((chordName) =>
-            chordName.toLowerCase().contains(query.toLowerCase()))
-        .map((chordName) => ChordOption(chordName))
-        .toList();
   }
 }
 
@@ -76,7 +31,7 @@ class _SearchBoxState extends State<SearchBox> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(top: 50, left: 40, right: 40),
+        margin: EdgeInsets.only(left: 40, right: 40),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Theme.of(context).backgroundColor,
@@ -104,8 +59,6 @@ class _SearchBoxState extends State<SearchBox> {
                         width: 200,
                         child: TextField(
                             controller: _controller,
-                            // onSubmitted: (value) =>
-                            //     widget.updateChord(value),
                             decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide.none),

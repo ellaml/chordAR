@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'chord_search.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
-import '../app_colors.dart' as appColors;
 
 class ChordBankScreen extends StatelessWidget {
   @override
@@ -10,7 +9,7 @@ class ChordBankScreen extends StatelessWidget {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: AppBar(
-              backgroundColor: appColors.backgroundColor,
+              backgroundColor: Theme.of(context).backgroundColor,
               centerTitle: true,
               title: Text("Chord Bank",
                   style: TextStyle(fontSize: 24, color: Colors.white)),
