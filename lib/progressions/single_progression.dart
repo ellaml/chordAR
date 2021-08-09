@@ -9,14 +9,15 @@ import '../app_colors.dart' as appColors;
 class SingleProgression extends StatelessWidget {
   final String buttonLabel;
   final int id;
+  final double width, height;
 
-  SingleProgression(this.buttonLabel, this.id);
+  SingleProgression(this.buttonLabel, this.id, this.width, this.height);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 300,
-        height: 50,
+        width: width,
+        height: height,
         margin: EdgeInsets.all(10),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -33,7 +34,7 @@ class SingleProgression extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Text(buttonLabel,
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 0.3 * height, // height was 50
                         fontWeight: FontWeight.bold,
                         color: appColors.buttonText),
                     textAlign: TextAlign.center),

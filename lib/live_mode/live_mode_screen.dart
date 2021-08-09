@@ -6,7 +6,7 @@ class LiveModeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Text('Live Mode')
+      body: Text('Live Mode'),
     );
   }
 }

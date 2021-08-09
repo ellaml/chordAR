@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/utils.dart';
 import 'main_menu/main_menu.dart';
 import 'settings/settings_screen.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           // Define the default font family.
           dialogBackgroundColor: Color(0xFF2E2D3B),
           scaffoldBackgroundColor: Color(0xFF2E2D3B),
-          fontFamily: 'Segoe UI',
+          fontFamily: 'BankGothicLight',
 
           // Define the default TextTheme. Use this to specify the default
           // text styling for headlines, titles, bodies of text, and more.
@@ -53,33 +54,37 @@ void openSettings(BuildContext context) {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ScreenData screenData = ScreenData(context);
+    final appBar = AppBar(
+      automaticallyImplyLeading: true,
+      elevation: 0,
+      actions: [
+        Flexible(
+            flex: 1,
+            child: GestureDetector(
+                onTap: () => openSettings(context),
+                child: Container(
+                  color: appColors.backgroundColor,
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.all(10),
+                          height: screenData.isBigDevice ? 64 : 32,
+                          width: screenData.isBigDevice ? 64 : 32,
+                          child: Image.asset('assets/icons/settings' +
+                              (screenData.isBigDevice ? '64' : '32') +
+                              '.png'))
+                    ],
+                  ),
+                ))),
+      ],
+    );
     return Scaffold(
         extendBody: true,
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          elevation: 0,
-          actions: [
-            Flexible(
-                flex: 1,
-                child: GestureDetector(
-                    onTap: () => openSettings(context),
-                    child: Container(
-                      color: appColors.backgroundColor,
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Container(
-                              margin: EdgeInsets.all(10),
-                              height: 32,
-                              width: 32,
-                              child: Image.asset(
-                                  'assets/icons/settings-purple32.png'))
-                        ],
-                      ),
-                    ))),
-          ],
-        ),
+        extendBodyBehindAppBar: false,
+        appBar: appBar,
         body: MainMenu());
   }
 }

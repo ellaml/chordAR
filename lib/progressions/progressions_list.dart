@@ -5,6 +5,7 @@ import '../search_box.dart';
 import 'package:provider/provider.dart';
 import '../providers/progressions.dart';
 import '../providers/progression.dart';
+import '../utils.dart';
 
 class ProgressionsList extends StatefulWidget {
   @override
@@ -20,11 +21,7 @@ class _ProgressionsListState extends State<ProgressionsList> {
   void initState() {
     super.initState();
   }
-
-  // didChangeDependencie() {
-  //   displayedProgressions =  Provider.of<Progressions>(context).items;
-  // }
-
+  
   void _updateList(String chordName) {
     setState(() {
       displayedProgressions
@@ -34,63 +31,80 @@ class _ProgressionsListState extends State<ProgressionsList> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData screenData = ScreenData(context);
     final progressionsData = Provider.of<Progressions>(context);
     final progressions = progressionsData.items;
-    return Container(
+    Container searchBoxContainer = Container(
+        child: SearchBox(_updateList, screenData.screenWidth * 0.7));
+    Container plusContainer = Container(
+      height: screenData.screenHeight * 0.1,
+        margin: EdgeInsets.all(20),
+        alignment: Alignment.center,
+        child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(EditProgressionScreen.routeName);
+            },
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Container(child: Image.asset('assets/icons/plus64.png')),
+              Container(
+                  margin: EdgeInsets.all(20),
+                  child: Text(
+                    "Add new Progression",
+                    style: TextStyle(
+                      fontSize: 0.03 * screenData.screenHeight,
+                      color: Colors.white),
+                  ))
+            ])));
+    Container listContainer = Container(
+      height: screenData.screenHeight * 0.6,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(bottom: 20),
-              child: SearchBox(_updateList)),
-          Expanded(
-              flex: 3,
-              child: Column(children: [
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    children: progressions
-                        .map((progression) => SingleProgression(
-                            progression.name == ''
-                                ? progression.chords
-                                    .map((e) => e.name)
-                                    .toString()
-                                : progression.name,
-                            progression.id))
-                        .toList(),
-                  ),
-                ),
-                Container(
-                    color: Theme.of(context).backgroundColor,
-                    margin: EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
-                              .pushNamed(EditProgressionScreen.routeName);
-                        },
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                  child:
-                                      Image.asset('assets/icons/plus64.png')),
-                              Container(
-                                  margin: EdgeInsets.all(20),
-                                  child: Text(
-                                    "Add new Progression",
-                                    style: TextStyle(color: Colors.white),
-                                  ))
-                            ])))
-              ]))
-        ]));
+          children: progressions
+              .map((progression) => SingleProgression(
+                  progression.name == ''
+                      ? progression.chords.map((e) => e.name).toString()
+                      : progression.name,
+                 progression.id, 0.7 * screenData.screenWidth, 0.1 * screenData.screenHeight))
+              .toList(),
+        ),
+      ),
+    );
+    return Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          searchBoxContainer,
+          screenData.isSmallLandscape
+              ? Row(
+                  children: [
+                    Container(
+                      height: screenData.screenHeight * 0.6,
+                      width: screenData.screenWidth * 0.6,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: progressions
+                              .map((progression) => SingleProgression(
+                                  progression.name == ''
+                                      ? progression.chords
+                                          .map((e) => e.name)
+                                          .toString()
+                                      : progression.name,
+                                  progression.id, 0.7 * screenData.screenWidth, 0.1 * screenData.screenHeight))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    plusContainer,
+                  ],
+                )
+              : Column(
+                  children: [
+                    listContainer,
+                    plusContainer,
+                  ],
+                )
+        ]);
   }
 }
-
-
-/*
-SearchBox(_updateChord)
-
-searchedChord
-*/

@@ -5,6 +5,7 @@ class MenuButton extends StatelessWidget {
   final String buttonLabel;
   final String imgSrc;
   final Widget route;
+  final double height, width;
 
   void changeScreen(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(
@@ -14,15 +15,16 @@ class MenuButton extends StatelessWidget {
     ));
   }
 
-  MenuButton(this.route, this.imgSrc, this.buttonLabel);
+  MenuButton(
+      this.route, this.imgSrc, this.buttonLabel, this.height, this.width);
 
   @override
   Widget build(BuildContext context) {
+    double imageSize = (width > 400 ? 0.3 : 0.23) * this.width;
     return Container(
-        width: 235,
-        height: 85,
+        width: width,
+        height: height,
         color: Color(0x00FFFFFF),
-        margin: EdgeInsets.all(10),
         child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Color(0x00FFFFFF)),
@@ -35,18 +37,19 @@ class MenuButton extends StatelessWidget {
             ),
             onPressed: () => changeScreen(context),
             child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                      height: 64,
-                      width: 64,
-                      margin: EdgeInsets.all(10),
+                      height: imageSize,
+                      width: imageSize,
+                      margin: EdgeInsets.fromLTRB(
+                          0, 0.1 * imageSize, 0.2 * imageSize, 10),
                       child: Image.asset(this.imgSrc)),
                   Container(
                       child: Text(
                     buttonLabel,
                     style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 0.24 * this.height,
                         fontWeight: FontWeight.bold,
                         color: appColors.buttonText),
                     textAlign: TextAlign.center,

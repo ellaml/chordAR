@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'models/chord.dart';
+import 'utils.dart';
 
 class SearchBox extends StatefulWidget {
   final Function updateChord;
+  final double width;
 
-  const SearchBox(this.updateChord);
+  const SearchBox(this.updateChord, this.width);
 
   @override
   State<StatefulWidget> createState() {
@@ -30,8 +32,11 @@ class _SearchBoxState extends State<SearchBox> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData screenData = ScreenData(context);
+    double chordBoxWidth = screenData.isBigDevice ? 90 : 60;
+    double chordBoxHeight = screenData.isBigDevice ? 70 : 50;
     return Container(
-        margin: EdgeInsets.only(left: 40, right: 40),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Theme.of(context).backgroundColor,
@@ -40,7 +45,7 @@ class _SearchBoxState extends State<SearchBox> {
                   color: Colors.white12, offset: Offset(2, 2), blurRadius: 20)
             ]),
         child: Container(
-            // margin: EdgeInsets.all(40),
+            width: widget.width,
             decoration: BoxDecoration(
                 color: Color(0x26FFFFFF),
                 borderRadius: BorderRadius.circular(10),
@@ -51,12 +56,14 @@ class _SearchBoxState extends State<SearchBox> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                     Container(
-                        height: 44,
-                        width: 44,
+                        height: screenData.isBigDevice ? 80 : 44,
+                        width: screenData.isBigDevice ? 80 : 44,
                         margin: EdgeInsets.all(10),
-                        child: Image.asset('assets/icons/glass64.png')),
+                        child: Image.asset('assets/icons/glass' +
+                            (screenData.isBigDevice ? '128' : '64') +
+                            '.png')),
                     Container(
-                        width: 200,
+                        width: widget.width * 0.7,
                         child: TextField(
                             controller: _controller,
                             decoration: InputDecoration(
@@ -67,9 +74,11 @@ class _SearchBoxState extends State<SearchBox> {
                                 filled: false,
                                 labelText: "Filter by name...",
                                 labelStyle: TextStyle(
+                                    fontFamily: 'Roboto',
                                     fontStyle: FontStyle.italic,
                                     color: Colors.white,
-                                    fontSize: 18))))
+                                    fontSize:
+                                        screenData.isBigDevice ? 26 : 18))))
                   ])),
               Container(
                   child: SingleChildScrollView(
@@ -82,8 +91,8 @@ class _SearchBoxState extends State<SearchBox> {
                                         widget.updateChord(chordOption.name),
                                       },
                                   child: Container(
-                                      width: 60,
-                                      height: 50,
+                                      width: chordBoxWidth,
+                                      height: chordBoxHeight,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                           boxShadow:
@@ -102,15 +111,17 @@ class _SearchBoxState extends State<SearchBox> {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(10)),
                                           border: Border.all(
-                                            width: 2,
+                                              width: 2,
                                               color: Theme.of(context)
                                                   .primaryColor)),
                                       padding: EdgeInsets.all(10),
                                       margin: EdgeInsets.all(10),
                                       child: Text(
                                         chordOption.name,
-                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                        ))))
+                                        style: TextStyle(
+                                            fontSize: 0.3 * chordBoxHeight,
+                                            fontWeight: FontWeight.bold),
+                                      ))))
                               .toList())))
             ])));
   }
