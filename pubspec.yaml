@@ -25,6 +25,7 @@ dependencies:
     sdk: flutter
   provider: ^4.0.0
   drag_and_drop_gridview:
+  dotted_border: ^2.0.0+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,6 +67,7 @@ flutter:
      - assets/icons/settings.png
      - assets/icons/settings32.png
      - assets/icons/settings64.png
+     - assets/icons/letter-x.png
      - assets/icons/back-purple32.png
      - assets/icons/left-arrow.png
      - assets/icons/right-arrow.png

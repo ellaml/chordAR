@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_complete_guide/progressions/plan_progression.dart';
-//import 'package:flutter_complete_guide/providers/progression.dart';
 import '../progressions/edit_progression_screen.dart';
 import '../providers/progressions.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +32,7 @@ class SingleProgression extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: Text(buttonLabel,
                     style: TextStyle(
-                        fontSize: 0.3 * height, // height was 50
+                        fontSize: 0.3 * height,
                         fontWeight: FontWeight.bold,
                         color: appColors.buttonText),
                     textAlign: TextAlign.center),

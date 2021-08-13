@@ -3,10 +3,10 @@ import 'models/chord.dart';
 import 'utils.dart';
 
 class SearchBox extends StatefulWidget {
-  final Function updateChord;
+  final Function callBack;
   final double width;
 
-  const SearchBox(this.updateChord, this.width);
+  const SearchBox(this.callBack, this.width);
 
   @override
   State<StatefulWidget> createState() {
@@ -56,8 +56,8 @@ class _SearchBoxState extends State<SearchBox> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                     Container(
-                        height: screenData.isBigDevice ? 80 : 44,
-                        width: screenData.isBigDevice ? 80 : 44,
+                        height: screenData.isBigDevice ? 70 : 44,
+                        width: screenData.isBigDevice ? 70 : 44,
                         margin: EdgeInsets.all(10),
                         child: Image.asset('assets/icons/glass' +
                             (screenData.isBigDevice ? '128' : '64') +
@@ -88,7 +88,7 @@ class _SearchBoxState extends State<SearchBox> {
                               .map((chordOption) => GestureDetector(
                                   onTap: () => {
                                         chosenChord = chordOption.name,
-                                        widget.updateChord(chordOption.name),
+                                        widget.callBack(chordOption.name),
                                       },
                                   child: Container(
                                       width: chordBoxWidth,
