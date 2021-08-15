@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_complete_guide/cord_notes.dart';
+import 'package:flutter_complete_guide/providers/chords_widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'live_mode_screen.dart';
 
 class Camera extends StatefulWidget {
 
@@ -11,19 +18,37 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   List<CameraDescription> _cameras;
   CameraController _controller;
   int _selected = 0;
+  Timer _timer;
+  List<Widget> listOfCordPointWidgets = [];
 
+  void _updateListOfCordePointWidgets() async {
+    XFile xfile = await _controller?.takePicture();
+    listOfCordPointWidgets = await createNoteWidgetsByFrame(xfile.path);
+    await removeFile(xfile.path);
+  }
   @override
   void initState() {
+
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        print("HIII");
+        _updateListOfCordePointWidgets();
+      });
+    });
+
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.addObserver(this);
+    _timer.cancel();
+    _timer = null;
     _controller?.dispose();
     super.dispose();
+
   }
 
   @override
@@ -41,12 +66,21 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+
     if (_controller == null) {
       return Container(
           color: Colors.black,
         );
     } else {
-      return CameraPreview(_controller);
+      return Scaffold(
+          appBar: AppBar(),
+          body: Stack(
+            children: [
+              Text('Live Mode'),
+              CameraPreview(_controller),
+              ...listOfCordPointWidgets,
+            ],
+          ));
     }
   }
 
@@ -62,4 +96,11 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     return controller;
   }
 
+
+  Future<void> removeFile(String filePath) async {
+    final file = io.File(filePath);
+    if (file.existsSync()) {
+      await file.delete();
+    }
+  }
 }

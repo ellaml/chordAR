@@ -78,6 +78,7 @@ Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
   String path = await getPathToSaveFrame();
   File(framePath).copy(path);
   var outputMap = await Chaquopy.executeCode("script.py");
+  print("Fuck you!!!!!!" + outputMap['textOutputOrError'].toString());
   return outputMap['textOutputOrError'].toString();
 }
 
@@ -108,7 +109,7 @@ String cleanStringForJson(String str)
 Future<List<Widget>> createNoteWidgetsByFrame(String framePath)
 async {
   String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath);
-  listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("(\\t|\\r?\\n)+", " ");
+  listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   print("string: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];
   if(listOfNotesInfoStr.contains(new RegExp(r'failed', caseSensitive: false)))
