@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:camera/camera.dart';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
 import './constants.dart';
@@ -122,3 +123,4 @@ async {
  // }
   return listOfWidgets;
 }
+

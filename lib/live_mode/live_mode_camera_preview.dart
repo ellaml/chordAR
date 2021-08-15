@@ -1,49 +1,65 @@
-import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-List<CameraDescription> cameras;
+class Camera extends StatefulWidget {
 
-/*Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  cameras = await availableCameras();
-  runApp(LiveModeCameraPreview());
-}*/
-
-class LiveModeCameraPreview extends StatefulWidget {
-  @override
-  _LiveModeCameraPreviewState createState() => _LiveModeCameraPreviewState();
+  _CameraState createState() => _CameraState();
 }
 
-class _LiveModeCameraPreviewState extends State<LiveModeCameraPreview> {
-  CameraController controller;
+class _CameraState extends State<Camera> with WidgetsBindingObserver {
+  List<CameraDescription> _cameras;
+  CameraController _controller;
+  int _selected = 0;
 
   @override
   void initState() {
     super.initState();
-    controller = CameraController(cameras[0], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    });
+    setupCamera();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    WidgetsBinding.instance.addObserver(this);
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (!controller.value.isInitialized) {
-      return Container();
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (_controller == null || !_controller.value.isInitialized) {
+      return;
     }
-    return MaterialApp(
-      home: CameraPreview(controller),
-    );
+
+    if (state == AppLifecycleState.inactive) {
+      _controller?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      setupCamera();
+    }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_controller == null) {
+      return Container(
+          color: Colors.black,
+        );
+    } else {
+      return CameraPreview(_controller);
+    }
+  }
+
+  Future<void> setupCamera() async {
+    _cameras = await availableCameras();
+    var controller = await selectCamera();
+    setState(() => _controller = controller);
+  }
+
+  selectCamera() async {
+    var controller = CameraController(_cameras[_selected], ResolutionPreset.low);
+    await controller.initialize();
+    return controller;
+  }
+
 }
