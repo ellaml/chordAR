@@ -3,7 +3,7 @@ import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter_complete_guide/cord_notes.dart';
+import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/providers/chords_widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,6 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
-        print("HIII");
         _updateListOfCordePointWidgets();
       });
     });

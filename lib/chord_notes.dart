@@ -78,7 +78,7 @@ Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
   String path = await getPathToSaveFrame();
   File(framePath).copy(path);
   var outputMap = await Chaquopy.executeCode("script.py");
-  print("Fuck you!!!!!!" + outputMap['textOutputOrError'].toString());
+  print(outputMap['textOutputOrError'].toString());
   return outputMap['textOutputOrError'].toString();
 }
 
