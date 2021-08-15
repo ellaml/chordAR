@@ -4,19 +4,19 @@ import 'package:camera/camera.dart';
 
 List<CameraDescription> cameras;
 
-Future<void> main() async {
+/*Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   cameras = await availableCameras();
-  runApp(CameraApp());
-}
+  runApp(LiveModeCameraPreview());
+}*/
 
-class CameraApp extends StatefulWidget {
+class LiveModeCameraPreview extends StatefulWidget {
   @override
-  _CameraAppState createState() => _CameraAppState();
+  _LiveModeCameraPreviewState createState() => _LiveModeCameraPreviewState();
 }
 
-class _CameraAppState extends State<CameraApp> {
+class _LiveModeCameraPreviewState extends State<LiveModeCameraPreview> {
   CameraController controller;
 
   @override
