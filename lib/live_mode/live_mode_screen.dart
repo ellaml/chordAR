@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/live_mode/live_mode_camera_preview.dart';
 
 class LiveModeScreen extends StatelessWidget {
 
@@ -6,7 +7,16 @@ class LiveModeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Text('Live Mode'),
+      body: Column(
+        children: [
+          Text('Live Mode'),
+          LiveModeCameraPreview(),
+          //...listOfCordPointWidgets,
+        ],
+      )
+
+
+
     );
   }
 }
