@@ -1,16 +1,11 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
-import 'package:flutter_complete_guide/providers/chords_widgets.dart';
-import 'package:provider/provider.dart';
-
-import 'live_mode_screen.dart';
+import 'package:flutter_complete_guide/utils.dart';
 
 class Camera extends StatefulWidget {
-
   _CameraState createState() => _CameraState();
 }
 
@@ -19,25 +14,24 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   CameraController _controller;
   int _selected = 0;
   Timer _timer;
-  List<Widget> listOfCordPointWidgets = [];
+  List<Widget> listOfChordPointsWidgets = [];
 
-  void _updateListOfCordePointWidgets() async {
+  void _updateListOfChordPointWidgets() async {
     XFile xfile = await _controller?.takePicture();
-    listOfCordPointWidgets = await createNoteWidgetsByFrame(xfile.path);
+    listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path);
     await removeFile(xfile.path);
   }
+
   @override
   void initState() {
-
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
-        _updateListOfCordePointWidgets();
+        _updateListOfChordPointWidgets();
       });
     });
-
   }
 
   @override
@@ -47,7 +41,6 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     _timer = null;
     _controller?.dispose();
     super.dispose();
-
   }
 
   @override
@@ -65,22 +58,33 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData screenData = ScreenData(context);
 
-    if (_controller == null) {
-      return Container(
-          color: Colors.black,
-        );
-    } else {
-      return Scaffold(
-          appBar: AppBar(),
-          body: Stack(
-            children: [
-              Text('Live Mode'),
-              CameraPreview(_controller),
-              ...listOfCordPointWidgets,
-            ],
-          ));
-    }
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).backgroundColor,
+          centerTitle: true,
+          title: Text("Live Mode",
+              style: TextStyle(
+                  fontSize: screenData.isBigDevice ? 32 : 24,
+                  color: Colors.white)),
+          leading: IconButton(
+              icon: Icon(Icons.chevron_left_rounded),
+              iconSize: 40,
+              onPressed: () => Navigator.pop(context)),
+          automaticallyImplyLeading: true,
+          elevation: 0,
+        ),
+        body: _controller == null
+            ? Container(color: Colors.black)
+            : Center(
+              child: Stack(
+                  children: [
+                    CameraPreview(_controller),
+                    ...listOfChordPointsWidgets,
+                  ],
+                ),
+            ));
   }
 
   Future<void> setupCamera() async {
@@ -90,11 +94,11 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   }
 
   selectCamera() async {
-    var controller = CameraController(_cameras[_selected], ResolutionPreset.low);
+    var controller =
+        CameraController(_cameras[_selected], ResolutionPreset.low);
     await controller.initialize();
     return controller;
   }
-
 
   Future<void> removeFile(String filePath) async {
     final file = io.File(filePath);
