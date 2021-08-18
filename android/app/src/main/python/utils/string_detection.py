@@ -31,9 +31,9 @@ def string_detection(cropped_neck_img: Image, fret_lines):
 
     lines = sorted(lines, key=lambda line: line[1])
     lines = remove_duplicate_horizontal_lines(lines=lines, height=cropped_neck_img.height)
-    # for line in lines:
-    #     cv2.line(cropped_neck_img.color_img, (fret_lines[0][0], line[1]), (fret_lines[-1][0], line[3]),
-    #              (255, 0, 0), int(cropped_neck_img.height * 0.02))
+    for line in lines:
+        cv2.line(cropped_neck_img.color_img, (fret_lines[0][0], line[1]), (fret_lines[-1][0], line[3]),
+                 (255, 0, 0), int(cropped_neck_img.height * 0.02))
     return lines
 
 

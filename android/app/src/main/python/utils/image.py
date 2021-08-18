@@ -23,7 +23,7 @@ class Image:
             else plt.imshow(self.gray, interpolation='none', cmap='gray')
 
     # def save_img(self):
-    #     plt.imsave(str(Path(rf"C:\Users\almogsh\PycharmProjects\Py-ChordAR\photos\working\test\{self.name}.png")),
+    #     plt.imsave(str(Path(rf"C:\Users\almogsh\PycharmProjects\Py_ChordAR\photos\working\test\{self.name}.png")),
     #                self.color_img)
 
     @staticmethod

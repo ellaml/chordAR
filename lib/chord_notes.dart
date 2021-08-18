@@ -70,6 +70,7 @@ async {
     }
   }
   newPath += "/files/chaquopy/AssetFinder/app/c.jpeg";
+  print("newPath:" + newPath);
   return newPath;
 }
 
@@ -92,11 +93,12 @@ List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates)
   return listOfWidgets;
 }
 
-Widget createFailureWidget()
+Widget createFailureWidget(String error, Color color)
 {
   return RichText(
-    text: const TextSpan(
-      text: 'Failure to process image',
+    text: TextSpan(
+      text: error,
+      style: TextStyle(height: 5, fontSize: 25, color: color),
     ),
   );
 }
@@ -110,18 +112,19 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath)
 async {
   String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
-  print("string: " + listOfNotesInfoStr);
+  print("stringC: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];
   if(listOfNotesInfoStr.contains(new RegExp(r'failed', caseSensitive: false)))
   {
-      listOfWidgets.add(createFailureWidget());
+      listOfWidgets.add(createFailureWidget(listOfNotesInfoStr, Colors.red));
   }
- // else TODO: Need to add after the image processing is ready
- // {
+  else// TODO: Need to add after the image processing is ready
+  {
+    listOfWidgets.add(createFailureWidget(listOfNotesInfoStr, Colors.green));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     final List<Point> listOfNotesCoordinates = convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates);
- // }
+  }
   return listOfWidgets;
 }
 

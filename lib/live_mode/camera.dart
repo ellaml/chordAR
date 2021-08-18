@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/utils.dart';
 
@@ -12,7 +13,8 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> with WidgetsBindingObserver {
   List<CameraDescription> _cameras;
   CameraController _controller;
-  int _selected = 0;
+  int _selected = 1; //For tablet
+  //int _selected = 0; //For computer emulator
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
 
@@ -26,16 +28,36 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     setupCamera();
+    /*if(_cameras.length >= 2)
+    {
+      setState(() {
+        _selected = 1;
+      });
+    }*/
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
     });
+    //Fix for length and not mirroring in tablet
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    //End of Fix for length and not mirroring in tablet
   }
 
   @override
   void dispose() {
+    //Fix for length and not mirroring in tablet
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    //End of Fix for length and not mirroring in tablet
     WidgetsBinding.instance.addObserver(this);
     _timer.cancel();
     _timer = null;
@@ -81,6 +103,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
               child: Stack(
                   children: [
                     CameraPreview(_controller),
+                    //Image.asset('assets/images/a.jpeg'), //Testing static image
                     ...listOfChordPointsWidgets,
                   ],
                 ),
@@ -95,7 +118,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   selectCamera() async {
     var controller =
-        CameraController(_cameras[_selected], ResolutionPreset.low);
+        CameraController(_cameras[_selected], ResolutionPreset.ultraHigh);
     await controller.initialize();
     return controller;
   }
