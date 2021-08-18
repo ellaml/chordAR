@@ -145,7 +145,6 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
                           style: TextStyle(
                               fontFamily: 'Roboto', fontSize: fontSize),
                           initialValue: _initValues['name'],
-                          textInputAction: TextInputAction.next,
                           onSaved: (value) {
                             _editedProgression = Progression(
                                 name: value,

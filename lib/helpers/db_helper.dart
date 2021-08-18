@@ -5,6 +5,9 @@ class DBHelper {
 
   static Future<sql.Database> database() async {
     final dbPath = await sql.getDatabasesPath();
+    // await sql.deleteDatabase(dbPath);
+    //final joinedPath = path.join(dbPath, 'progressions.db');
+   //await sql.deleteDatabase(joinedPath);
     return sql.openDatabase(path.join(dbPath, 'progressions.db'),
         onCreate: (db, version) {
       return db.execute(
@@ -32,3 +35,4 @@ class DBHelper {
   }
 
 }
+

@@ -53,7 +53,7 @@ class Progressions with ChangeNotifier {
         'name': newProgression.name
       });
     } else {
-      print('progression was not found when trying to update');
+      print('progression was found when trying to update');
     }
   }
 
@@ -70,9 +70,7 @@ class Progressions with ChangeNotifier {
   }
 
   List<ChordOption> createListFromText(String chordsAsText) {
-    List<ChordOption> chords;
-    chords =
-        (chordsAsText.split(',')).map((text) => ChordOption(text)).toList();
+    List<ChordOption> chords = (chordsAsText.split(',')).map((text) => ChordOption(text)).toList();
     return chords;
   }
 
@@ -80,7 +78,7 @@ class Progressions with ChangeNotifier {
 
   String formatChordsForDb(List<ChordOption> chords) {
     String chordsString = chords.map((e) => e.name).toList().toString();
-    return chordsString.substring(1, chords.length - 1);
+    return chordsString.substring(1, chordsString.length - 1);
   }
 }
 
