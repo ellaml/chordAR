@@ -13,8 +13,8 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> with WidgetsBindingObserver {
   List<CameraDescription> _cameras;
   CameraController _controller;
-  int _selected = 1; //For tablet
-  //int _selected = 0; //For computer emulator
+  //int _selected = 1; //For tablet
+  int _selected = 0; //For computer emulator
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
 
