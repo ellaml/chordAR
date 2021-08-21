@@ -11,10 +11,9 @@ class Camera extends StatefulWidget {
 }
 
 class _CameraState extends State<Camera> with WidgetsBindingObserver {
-  List<CameraDescription> _cameras;
   CameraController _controller;
-  //int _selected = 1; //For tablet
-  int _selected = 0; //For computer emulator
+  CameraDescription _selectedCamera;
+
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
 
@@ -28,12 +27,6 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     setupCamera();
-    /*if(_cameras.length >= 2)
-    {
-      setState(() {
-        _selected = 1;
-      });
-    }*/
     WidgetsBinding.instance.addObserver(this);
     _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
       setState(() {
@@ -84,7 +77,9 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme
+              .of(context)
+              .backgroundColor,
           centerTitle: true,
           title: Text("Live Mode",
               style: TextStyle(
@@ -100,25 +95,39 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
-              child: Stack(
-                  children: [
-                    CameraPreview(_controller),
-                    //Image.asset('assets/images/a.jpeg'), //Testing static image
-                    ...listOfChordPointsWidgets,
-                  ],
-                ),
-            ));
+          child: Stack(
+            children: [
+              CameraPreview(_controller),
+              //Image.asset('assets/images/a.jpeg'), //Testing static image
+              ...listOfChordPointsWidgets,
+            ],
+          ),
+        ));
   }
 
-  Future<void> setupCamera() async {
-    _cameras = await availableCameras();
-    var controller = await selectCamera();
-    setState(() => _controller = controller);
+  void setupCamera()
+  {
+    availableCameras().then((data) {
+      setState(() {
+        if (data.length >= 2) {
+          print("two cameras");
+          _selectedCamera = data[1];
+        }
+        else {
+          print("one camera");
+          _selectedCamera = data[0];
+        }
+        selectCamera().then((data) {
+          _controller = data;
+        });
+      });
+    });
   }
 
   selectCamera() async {
     var controller =
-        CameraController(_cameras[_selected], ResolutionPreset.ultraHigh);
+      CameraController(_selectedCamera, ResolutionPreset.ultraHigh);
+
     await controller.initialize();
     return controller;
   }
