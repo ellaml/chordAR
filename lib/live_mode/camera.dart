@@ -6,6 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/utils.dart';
 
+enum CameraType
+{
+  ONE,
+  TWO
+}
+
 class Camera extends StatefulWidget {
   _CameraState createState() => _CameraState();
 }
@@ -13,6 +19,7 @@ class Camera extends StatefulWidget {
 class _CameraState extends State<Camera> with WidgetsBindingObserver {
   CameraController _controller;
   CameraDescription _selectedCamera;
+  CameraType _cameraType;
 
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
@@ -20,6 +27,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void _updateListOfChordPointWidgets() async {
     XFile xfile = await _controller?.takePicture();
     listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path);
+    //listOfChordPointsWidgets = createNoteWidgetsByFrame(xfile.path);
     await removeFile(xfile.path);
   }
 
@@ -34,23 +42,31 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
       });
     });
     //Fix for length and not mirroring in tablet
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    if(_cameraType == CameraType.TWO)
+    {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
+
     //End of Fix for length and not mirroring in tablet
   }
 
   @override
   void dispose() {
     //Fix for length and not mirroring in tablet
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    if(_cameraType == CameraType.TWO)
+    {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
     //End of Fix for length and not mirroring in tablet
+
     WidgetsBinding.instance.addObserver(this);
     _timer.cancel();
     _timer = null;
@@ -99,7 +115,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             children: [
               CameraPreview(_controller),
               //Image.asset('assets/images/a.jpeg'), //Testing static image
-              ...listOfChordPointsWidgets,
+              ...listOfChordPointsWidgets,  //TODO
             ],
           ),
         ));
@@ -111,10 +127,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
       setState(() {
         if (data.length >= 2) {
           print("two cameras");
+          _cameraType = CameraType.TWO;
           _selectedCamera = data[1];
         }
         else {
           print("one camera");
+          _cameraType = CameraType.ONE;
           _selectedCamera = data[0];
         }
         selectCamera().then((data) {

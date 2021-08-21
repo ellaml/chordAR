@@ -1,14 +1,25 @@
 import os
 import glob
+import cv2
+import numpy as np
 from pathlib import Path
-
+import time
 from utils.guitar_image import GuitarImage
+
+
+def enhance_image(img_path):
+    img = cv2.imread(img_path)
+    kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+    im = cv2.filter2D(img, -1, kernel)
+    cv2.imwrite(img_path, im)
+
 
 def mainTextCode(code):
     Emaj_chord = "x,7,6,4,5,4"
     a = os.path.dirname(__file__)
 
     filename = os.path.join(a,"c.jpeg")
+    #enhance_image(filename)
     #filename = os.path.join(a,"d.jpeg")
     #my_file = Path(filename)
     #if my_file.is_file():

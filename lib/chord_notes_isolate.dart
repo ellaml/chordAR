@@ -8,6 +8,43 @@ import 'package:flutter/material.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 
+class ChordNodesWidgetIsolate extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => IsolatesState();
+}
+
+class IsolatesState extends State<ChordNodesWidgetIsolate> {
+
+  var listOfChordPointsWidgets;
+
+  @override
+  void initState() {
+    updateWidgets();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          ...listOfChordPointsWidgets,
+    ],)
+    );
+  }
+
+  void updateWidgets()
+  {
+    createNoteWidgetsByFrame("").then((data) {
+      setState(() {
+        listOfChordPointsWidgets = data;
+      });
+    });
+  }
+}
+
+
+
 Widget createNoteWidget(Point point)
 {
   return Positioned(
@@ -93,12 +130,12 @@ List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates)
   return listOfWidgets;
 }
 
-Widget createTextWidget(String error, Color color, double height )
+Widget createFailureWidget(String error, Color color)
 {
   return RichText(
     text: TextSpan(
       text: error,
-      style: TextStyle(height: height, fontSize: 15, color: color, fontWeight: FontWeight.bold),
+      style: TextStyle(height: 5, fontSize: 25, color: color),
     ),
   );
 }
@@ -116,22 +153,15 @@ async {
   List<Widget> listOfWidgets = [];
   if(listOfNotesInfoStr.contains(new RegExp(r'failed', caseSensitive: false)))
   {
-      listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.red, 1));
+      listOfWidgets.add(createFailureWidget(listOfNotesInfoStr, Colors.red));
   }
   else// TODO: Need to add after the image processing is ready
   {
-    listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
+    listOfWidgets.add(createFailureWidget(listOfNotesInfoStr, Colors.green));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     final List<Point> listOfNotesCoordinates = convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates);
   }
-  String pathToSaveFrame = await getPathToSaveFrame();
-  listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
   return listOfWidgets;
 }
-
-/*List<Widget> createNoteWidgetsByFrame(String framePath)
-{
-  return <Widget>[createNoteWidget(Point(1,2)), createNoteWidget((Point(50,40)))];
-}*/
 
