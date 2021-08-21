@@ -36,7 +36,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });

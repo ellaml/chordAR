@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:camera/camera.dart';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +78,7 @@ Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
 
   String path = await getPathToSaveFrame();
   File(framePath).copy(path);
+  GallerySaver.saveImage(path);
   var outputMap = await Chaquopy.executeCode("script.py");
   print(outputMap['textOutputOrError'].toString());
   return outputMap['textOutputOrError'].toString();

@@ -44,7 +44,7 @@ class GuitarImage(Image):
         detected_frets_pairwise = [
             (t[0][0], t[1][0]) for t in zip(detected_frets[:len(detected_frets)], detected_frets[1:])
         ]
-        return list(reversed([(line[0] + line[1]) // 2 for line in detected_frets_pairwise]))
+        return list([(line[0] + line[1]) // 2 for line in detected_frets_pairwise])
 
     def get_chord_coordinates(self, chord_to_draw: str) -> List[Coordinate]:
         note_by_string = chord_to_draw.split(',')
