@@ -18,7 +18,7 @@ def mainTextCode(code):
     Emaj_chord = "x,7,6,4,5,4"
     a = os.path.dirname(__file__)
 
-    filename = os.path.join(a,"c.jpeg")
+    filename = os.path.join(a,"d.jpeg")
     #enhance_image(filename)
     #filename = os.path.join(a,"d.jpeg")
     #my_file = Path(filename)
@@ -42,13 +42,16 @@ def mainTextCode(code):
     #         guitar.get_chord_coordinates(Emaj_chord)
     #     except Exception as e:
     #         print(rf"{filename} : {e}")
-    try:
-        guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
-        coordinates = guitar.get_chord_coordinates(Emaj_chord)
-        print(buildJson(coordinates))
-    except Exception as e:
-        print("failed")
-        print(e)
+    #try:
+    #    guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
+    #    coordinates = guitar.get_chord_coordinates(Emaj_chord)
+    #    print(buildJson(coordinates))
+    #except Exception as e:
+    #    print("failed")
+    #    print(e)
+    json_details = '{ "notes_coordinates": [ {"x": 4, "y": 90}, {"x": 782, "y": 182},{"x": 293, "y": 463},{"x": 50, "y": 20}],"numOfNotes": "4"}'
+    json_details = json_details.replace("'","\"")
+    print(json_details)
 
 def buildJson(coordinates):
     json_details="{'notes_coordinates': ["

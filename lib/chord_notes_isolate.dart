@@ -106,7 +106,7 @@ async {
       break;
     }
   }
-  newPath += "/files/chaquopy/AssetFinder/app/c.jpeg";
+  newPath += "/files/chaquopy/AssetFinder/app/d.jpeg";
   print("newPath:" + newPath);
   return newPath;
 }
