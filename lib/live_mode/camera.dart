@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/utils.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 enum CameraType
 {
@@ -27,7 +28,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void _updateListOfChordPointWidgets() async {
     XFile xfile = await _controller?.takePicture();
     listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path);
-    //listOfChordPointsWidgets = createNoteWidgetsByFrame(xfile.path);
+    await removeFile(xfile.path);
+  }
+
+  void _saveImgToGallery() async {
+    XFile xfile = await _controller?.takePicture();
+    await ImageGallerySaver.saveFile(xfile.path); //Save Image to Gallery
     await removeFile(xfile.path);
   }
 
@@ -36,11 +42,15 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
     });
+    _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+      _saveImgToGallery();
+    });
+    //
     //Fix for length and not mirroring in tablet
     if(_cameraType == CameraType.TWO)
     {
