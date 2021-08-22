@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -76,9 +77,12 @@ async {
 
 Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
 
-  //String path = await getPathToSaveFrame(); //TODO
-  //File(framePath).copy(path); //TODO
+  String path = await getPathToSaveFrame(); //TODO
+  File(framePath).copy(path); //TODO
+  print("Frame!!!!:" + path);
   //GallerySaver.saveImage(path); //TODO
+ // await ImageGallerySaver.saveFile(path);
+  //print("RESULT!!!!!!:" + result);
   var outputMap = await Chaquopy.executeCode("script.py");
   print(outputMap['textOutputOrError'].toString());
   return outputMap['textOutputOrError'].toString();
