@@ -36,6 +36,7 @@ dependencies:
   flutter_focus_watcher: ^2.0.0
   camera: ^0.8.1+7
   video_player: ^2.1.12
+  flutter_launcher_icons: ^0.9.2
   image_gallery_saver: ^1.6.9
 
 dev_dependencies:
