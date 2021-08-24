@@ -124,7 +124,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           child: Stack(
             children: [
               CameraPreview(_controller),
-              //Image.asset('assets/images/a.jpeg'), //Testing static image
+              //Image.asset('assets/images/g70.png'), //Testing static image
               ...listOfChordPointsWidgets,  //TODO
             ],
           ),
