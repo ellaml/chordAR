@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="mta.guitar_flutter_app">
    <application
-        android:label="guitar_flutter_app"
+        android:label="ChordAR"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
