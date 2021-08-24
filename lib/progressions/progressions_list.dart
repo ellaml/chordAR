@@ -34,6 +34,7 @@ class _ProgressionsListState extends State<ProgressionsList> {
                   child: Text(
                     "Add new Progression",
                     style: TextStyle(
+                        fontFamily: 'BankGothicLight',
                         fontSize: 0.05 * screenData.screenHeight,
                         color: Colors.white),
                   ))
