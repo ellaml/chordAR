@@ -7,12 +7,13 @@ import time
 from utils.guitar_image import GuitarImage
 
 
+'''
 def enhance_image(img_path):
     img = cv2.imread(img_path)
     kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
     im = cv2.filter2D(img, -1, kernel)
     cv2.imwrite(img_path, im)
-
+'''
 
 def mainTextCode(code):
     Emaj_chord = "x,7,6,4,5,4"
