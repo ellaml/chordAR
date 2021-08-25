@@ -46,6 +46,7 @@ def mainTextCode(code):
     try:
         guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
         coordinates = guitar.get_chord_coordinates(Emaj_chord)
+        coordinates = guitar.get_chord_coordinates_relative(coordinates)
         print(buildJson(coordinates))
     except Exception as e:
         print("failed")

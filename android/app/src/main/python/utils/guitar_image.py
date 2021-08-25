@@ -67,6 +67,10 @@ class GuitarImage(Image):
         # print(drawing_coordinates)
         return drawing_coordinates
 
+    def get_chord_coordinates_relative(self, chord_coordinates: List[Coordinate]) -> List[Coordinate]:
+        return [self.Coordinate(x // self.height, y//self.width) for (x,y) in chord_coordinates]
+
+
     def crop_neck(self) -> Tuple[Image, int, int]:
         edges = cv2.Canny(image=self.rotated.blur_gray, threshold1=20, threshold2=45)
         edges = cv2.Canny(image=edges, threshold1=20, threshold2=180)
@@ -75,7 +79,8 @@ class GuitarImage(Image):
         ret, mag = cv2.threshold(src=mag, thresh=127, maxval=255, type=cv2.THRESH_BINARY)
         # plt.imshow(mag, interpolation='none', cmap='gray')
         # plt.show()
-        lines = cv2.HoughLinesP(image=mag.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18, minLineLength=50)
+        lines = cv2.HoughLinesP(image=mag.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
+                                minLineLength=45)
         y = chain.from_iterable(itemgetter(1, 3)(line[0]) for line in lines)
         y = list(sorted(y))
         y_differences = [0]
