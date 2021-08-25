@@ -42,14 +42,14 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
     });
-    _timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
-      _saveImgToGallery();
-    });
+    //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
+    //  _saveImgToGallery();
+    //});
     //
     //Fix for length and not mirroring in tablet
     if(_cameraType == CameraType.TWO)

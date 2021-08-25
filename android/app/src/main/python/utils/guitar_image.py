@@ -23,11 +23,12 @@ class GuitarImage(Image):
     def __init__(self, **kwargs) -> None:  # , file_name:str=""):
         Image.__init__(self, **kwargs)  # , file_name=file_name)
         self.rotated, self.rotation_angle, self.image_center = self.rotate_img()
+        self.flipped = Image(img=cv2.flip(src=self.color_img, flipCode=1))
         crop_res = self.crop_neck()
         self.cropped = crop_res[0]
         self.crop_area = self.Crop_Area(crop_res[1], crop_res[2])
-        self.cropped.plot_img()
-        #plt.show()
+        # self.cropped.plot_img()
+        # plt.show()
         detected_frets = fret_detection(cropped_neck_img=self.cropped)
         self.frets = self.calculate_frets_xs(detected_frets=detected_frets)
         # height = self.cropped.height // 2
@@ -56,16 +57,19 @@ class GuitarImage(Image):
                 restored_coordinate = self.restore_coordinates(rotated_X=x, rotated_Y=y, center=self.image_center)
                 drawing_coordinates.append(restored_coordinate)
                 cv2.circle(
-                    img=self.color_img,
+                    img=self.flipped.color_img,
                     center=(restored_coordinate.x, restored_coordinate.y),
                     radius=1,
                     color=(0, 187, 255),
                     thickness=int(self.cropped.width * 0.008))
-        self.plot_img()
-        print(drawing_coordinates)
+        # self.plot_img()
         # plt.show()
         # print(drawing_coordinates)
         return drawing_coordinates
+
+    def get_chord_coordinates_relative(self, chord_coordinates: List[Coordinate]) -> List[Coordinate]:
+        return [self.Coordinate(x // self.height, y//self.width) for (x,y) in chord_coordinates]
+
 
     def crop_neck(self) -> Tuple[Image, int, int]:
         edges = cv2.Canny(image=self.rotated.blur_gray, threshold1=20, threshold2=45)
@@ -75,7 +79,8 @@ class GuitarImage(Image):
         ret, mag = cv2.threshold(src=mag, thresh=127, maxval=255, type=cv2.THRESH_BINARY)
         # plt.imshow(mag, interpolation='none', cmap='gray')
         # plt.show()
-        lines = cv2.HoughLinesP(image=mag.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18, minLineLength=50)
+        lines = cv2.HoughLinesP(image=mag.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
+                                minLineLength=45)
         y = chain.from_iterable(itemgetter(1, 3)(line[0]) for line in lines)
         y = list(sorted(y))
         y_differences = [0]

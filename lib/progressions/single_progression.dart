@@ -6,7 +6,7 @@ import '../app_colors.dart' as appColors;
 
 class SingleProgression extends StatelessWidget {
   final String buttonLabel;
-  final int id;
+  final String id;
   final double width, height;
 
   SingleProgression(this.buttonLabel, this.id, this.width, this.height);

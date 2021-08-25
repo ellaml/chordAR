@@ -6,6 +6,7 @@ import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 Widget createNoteWidget(Point point)
 {
@@ -123,9 +124,13 @@ async {
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     final List<Point> listOfNotesCoordinates = convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates);
+
+    await ImageGallerySaver.saveFile(framePath);
   }
   String pathToSaveFrame = await getPathToSaveFrame();
   listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
+
+  listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.blue, 40));
   return listOfWidgets;
 }
 
