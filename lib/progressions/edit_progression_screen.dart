@@ -45,7 +45,7 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final progressionId = ModalRoute.of(context).settings.arguments as int;
+      final progressionId = ModalRoute.of(context).settings.arguments as String;
       if (progressionId != null) {
         Progression existing = Provider.of<Progressions>(context, listen: false)
             .findById(progressionId);
@@ -145,7 +145,6 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
                           style: TextStyle(
                               fontFamily: 'Roboto', fontSize: fontSize),
                           initialValue: _initValues['name'],
-                          textInputAction: TextInputAction.next,
                           onSaved: (value) {
                             _editedProgression = Progression(
                                 name: value,

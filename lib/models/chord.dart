@@ -33,7 +33,6 @@ class ChordOption {
       'F7',
       'Fm',
       'G',
-      'F#m',
       'G7',
       'Gm'
     ]
