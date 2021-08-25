@@ -21,13 +21,21 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   CameraController _controller;
   CameraDescription _selectedCamera;
   CameraType _cameraType;
+  double screenWidth, screenHeight;
+  final _stackKey = GlobalKey();
 
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
+    final RenderBox renderBox = this._stackKey.currentContext.findRenderObject();
+    final cameraHeight = renderBox.size.height;
+    final cameraWidth = renderBox.size.width;
+
+    final topAddition = 80.0; //app bar
+    final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
-    listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path);
+    listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
     await removeFile(xfile.path);
   }
 
@@ -100,6 +108,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     ScreenData screenData = ScreenData(context);
+    this.screenHeight = screenData.screenHeight;
+    this.screenWidth = screenData.screenWidth;
 
     return Scaffold(
         appBar: AppBar(
@@ -122,6 +132,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             ? Container(color: Colors.black)
             : Center(
           child: Stack(
+            key: this._stackKey,
             children: [
               CameraPreview(_controller),
               //Image.asset('assets/images/g70.png'), //Testing static image
