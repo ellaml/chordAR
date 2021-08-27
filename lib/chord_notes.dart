@@ -8,11 +8,10 @@ import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-Widget createNoteWidget(Point point)
-{
+Widget createNoteWidget(Point point, double top, double left, double width, double height) {
   return Positioned(
-    left: point.x.toDouble() ,
-    top: point.y.toDouble() ,
+    left: point.x.toDouble() / 100 * width + left,
+    top: point.y.toDouble() / 100 * height + top, // change - its always right after the appbar
     child: Container(
       width: WIDTH_NOTE,
       height: HEIGHT_NOTE,
@@ -24,48 +23,46 @@ Widget createNoteWidget(Point point)
   );
 }
 
-List<Point> createPointsListFromJson(dynamic listOfNotesCoordinatesJson, int numOfNotes)
-{
+List<Point> createPointsListFromJson(
+    dynamic listOfNotesCoordinatesJson, double numOfNotes) {
   final List<Point> listOfCordNotesCoordinates = <Point>[];
 
-  for(int i=0; i< numOfNotes; i++){
+  for (int i = 0; i < numOfNotes; i++) {
     final dynamic point = listOfNotesCoordinatesJson[i];
-    final int x = convertDynamicToInt(point[X_JSON_KEY]);
-    final int y = convertDynamicToInt(point[Y_JSON_KEY]);
-    listOfCordNotesCoordinates.add(Point(x,y));
+    final double x = double.parse(convertDynamicToDouble(point[X_JSON_KEY]).toStringAsFixed(2));
+    final double y = double.parse(convertDynamicToDouble(point[Y_JSON_KEY]).toStringAsFixed(2));
+    listOfCordNotesCoordinates.add(Point(x, y));
   }
 
   return listOfCordNotesCoordinates;
 }
 
-int convertDynamicToInt(dynamic jsonVal)
-{
-  return int.parse(jsonVal.toString());
+double convertDynamicToDouble(dynamic jsonVal) {
+  return double.parse(jsonVal.toString());
 }
 
-List<Point> convJsonToListOfNotesCoordinates(String listOfNotesInfoStr)
-{
+List<Point> convJsonToListOfNotesCoordinates(String listOfNotesInfoStr) {
   final dynamic listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
 
-  final dynamic listOfNotesCoordinatesJson = listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
-  final int numOfNotes = convertDynamicToInt(listOfNotesInfoJson[NUM_NOTES_JSON_KEY]);
+  final dynamic listOfNotesCoordinatesJson =
+      listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
+  final double numOfNotes =
+      convertDynamicToDouble(listOfNotesInfoJson[NUM_NOTES_JSON_KEY]);
 
   return createPointsListFromJson(listOfNotesCoordinatesJson, numOfNotes);
 }
 
-Future<String> getPathToSaveFrame()
-async {
-  String dirPath = await getApplicationDocumentsDirectory().then((Directory dir) => dir.path);
+Future<String> getPathToSaveFrame() async {
+  String dirPath = await getApplicationDocumentsDirectory()
+      .then((Directory dir) => dir.path);
   List<String> folders = dirPath.split("/");
-  String newPath="";
+  String newPath = "";
 
-  for(int i=1; i < folders.length; i++)
-  {
+  for (int i = 1; i < folders.length; i++) {
     String folder = folders[i];
-    if(folder != "app_flutter") {
+    if (folder != "app_flutter") {
       newPath += "/" + folder;
-    }
-    else {
+    } else {
       break;
     }
   }
@@ -75,7 +72,6 @@ async {
 }
 
 Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
-
   String path = await getPathToSaveFrame();
   File(framePath).copy(path);
   var outputMap = await Chaquopy.executeCode("script.py");
@@ -83,33 +79,35 @@ Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
   return outputMap['textOutputOrError'].toString();
 }
 
-List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates)
-{
+List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates,
+    double top, double left, double width, double height) {
   final List<Widget> listOfWidgets = [];
-  for(final Point point in listOfNotesCoordinates)
-  {
-    listOfWidgets.add(createNoteWidget(point));
+  for (final Point point in listOfNotesCoordinates) {
+    listOfWidgets.add(createNoteWidget(point, top, left, width, height));
   }
   return listOfWidgets;
 }
 
-Widget createTextWidget(String error, Color color, double height )
-{
+Widget createTextWidget(String error, Color color, double height) {
   return RichText(
     text: TextSpan(
       text: error,
-      style: TextStyle(height: height, fontSize: 15, color: color, fontWeight: FontWeight.bold),
+      style: TextStyle(
+          height: height,
+          fontSize: 15,
+          color: color,
+          fontWeight: FontWeight.bold),
     ),
   );
 }
 
-String cleanStringForJson(String str)
-{
-  return str.replaceAll(RegExp(r'^.*?{"notes_coordinates"'), '{"notes_coordinates"');
+String cleanStringForJson(String str) {
+  return str.replaceAll(
+      RegExp(r'^.*?{"notes_coordinates"'), '{"notes_coordinates"');
 }
 
-Future<List<Widget>> createNoteWidgetsByFrame(String framePath)
-async {
+Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
+    double left, double width, double height) async {
   String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   print("stringC: " + listOfNotesInfoStr);
@@ -123,8 +121,10 @@ async {
   {
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
-    final List<Point> listOfNotesCoordinates = convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
-    listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates);
+    final List<Point> listOfNotesCoordinates =
+        convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
+    listOfWidgets = createNoteWidgetsByListOfPoints(
+        listOfNotesCoordinates, top, left, width, height);
 
     await ImageGallerySaver.saveFile(framePath);
    // print("Gallery: " + fileName.toString());
