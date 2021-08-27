@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:camera/camera.dart';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
 import './constants.dart';
@@ -52,29 +51,17 @@ List<Point> convJsonToListOfNotesCoordinates(String listOfNotesInfoStr) {
   return createPointsListFromJson(listOfNotesCoordinatesJson, numOfNotes);
 }
 
-Future<String> getPathToSaveFrame() async {
-  String dirPath = await getApplicationDocumentsDirectory()
-      .then((Directory dir) => dir.path);
-  List<String> folders = dirPath.split("/");
-  String newPath = "";
 
-  for (int i = 1; i < folders.length; i++) {
-    String folder = folders[i];
-    if (folder != "app_flutter") {
-      newPath += "/" + folder;
-    } else {
-      break;
-    }
+Future<String> fetchNotesInfoByPathOfFrame(String framePath, String pathToSaveFrame) async {
+  print("C1");
+  File(framePath).copy(pathToSaveFrame);
+  print("C3");
+  if(Chaquopy == null)
+  {
+    print("NULLLLLL!!!!!");
   }
-  newPath += "/files/chaquopy/AssetFinder/app/c.jpeg";
-  print("newPath:" + newPath);
-  return newPath;
-}
-
-Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
-  String path = await getPathToSaveFrame();
-  File(framePath).copy(path);
   var outputMap = await Chaquopy.executeCode("script.py");
+  print("C4");
   print(outputMap['textOutputOrError'].toString());
   return outputMap['textOutputOrError'].toString();
 }
@@ -106,9 +93,12 @@ String cleanStringForJson(String str) {
       RegExp(r'^.*?{"notes_coordinates"'), '{"notes_coordinates"');
 }
 
-Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
+Future<List<Widget>> createNoteWidgetsByFrame(String framePath, String pathToSaveFrame, double top,
     double left, double width, double height) async {
-  String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath);
+  print("B1");
+  print(framePath);
+  String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath, pathToSaveFrame);
+  print("B2");
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   print("stringC: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];
@@ -126,10 +116,11 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
     listOfWidgets = createNoteWidgetsByListOfPoints(
         listOfNotesCoordinates, top, left, width, height);
 
-    await ImageGallerySaver.saveFile(framePath);
+
    // print("Gallery: " + fileName.toString());
    // print("frame Path: " + framePath);
   }
+  await ImageGallerySaver.saveFile(framePath);
   //String pathToSaveFrame = await getPathToSaveFrame();
   //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 
