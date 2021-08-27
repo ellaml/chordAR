@@ -126,10 +126,11 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
     listOfWidgets = createNoteWidgetsByListOfPoints(
         listOfNotesCoordinates, top, left, width, height);
 
-    await ImageGallerySaver.saveFile(framePath);
+    //await ImageGallerySaver.saveFile(framePath);
    // print("Gallery: " + fileName.toString());
    // print("frame Path: " + framePath);
   }
+  await ImageGallerySaver.saveFile(framePath);
   //String pathToSaveFrame = await getPathToSaveFrame();
   //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 
