@@ -112,12 +112,14 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   print("stringC: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];
-  if (listOfNotesInfoStr
-      .contains(new RegExp(r'failed', caseSensitive: false))) {
-    listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.red, 1));
-  } else // TODO: Need to add after the image processing is ready
+  if(listOfNotesInfoStr.contains(new RegExp(r'failed', caseSensitive: false)))
   {
-    listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
+    print("failed");
+      //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.red, 1));
+  }
+  else// TODO: Need to add after the image processing is ready
+  {
+    //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
@@ -125,11 +127,13 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
         listOfNotesCoordinates, top, left, width, height);
 
     await ImageGallerySaver.saveFile(framePath);
+   // print("Gallery: " + fileName.toString());
+   // print("frame Path: " + framePath);
   }
-  String pathToSaveFrame = await getPathToSaveFrame();
-  listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
+  //String pathToSaveFrame = await getPathToSaveFrame();
+  //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 
-  listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.blue, 40));
+  //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.blue, 40));
   return listOfWidgets;
 }
 
