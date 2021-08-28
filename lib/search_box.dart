@@ -16,7 +16,7 @@ class SearchBox extends StatefulWidget {
 
 class _SearchBoxState extends State<SearchBox> {
   TextEditingController _controller;
-  List<ChordOption> _chordOptions = [];
+  List<Chord> _chordOptions = [];
   String chosenChord;
 
   @override
@@ -24,7 +24,7 @@ class _SearchBoxState extends State<SearchBox> {
     _controller = new TextEditingController();
     _controller.addListener(() {
       setState(() =>
-          _chordOptions = ChordOption.getChordOptions(_controller.value.text));
+          _chordOptions = Chord.getChordOptions(_controller.value.text));
     });
 
     super.initState();

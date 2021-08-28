@@ -26,7 +26,7 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
     chords: [],
     interval: 5,
   );
-  List<ChordOption> finalChords = [];
+  List<Chord> finalChords = [];
   bool isSaveDisabled = true;
 
   var _initValues = {
@@ -90,7 +90,7 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
 
   void _addChordToGrid(String chordName) {
     setState(() {
-      _editedProgression.chords.last = (ChordOption(chordName));
+      _editedProgression.chords.last = (Chord(chordName));
     });
   }
 

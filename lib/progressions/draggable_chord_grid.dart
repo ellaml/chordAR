@@ -8,7 +8,7 @@ class DraggableChordGrid extends StatefulWidget {
   @override
   _DraggableChordGrid createState() => _DraggableChordGrid();
 
-  List<ChordOption> chords;
+  List<Chord> chords;
   final Function deleteChord;
   final double chordBoxWidth, chordBoxHeight;
   final chordsInRow;
@@ -18,7 +18,7 @@ class DraggableChordGrid extends StatefulWidget {
       this.deleteChord, this.chordsInRow) {
     this.chords = chords;
     if (this.chords.length == 0 || (this.chords.last.name != "dummy")) {
-      this.chords.add(ChordOption("dummy"));
+      this.chords.add(Chord("dummy"));
     }
   }
 }

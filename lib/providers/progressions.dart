@@ -69,14 +69,14 @@ class Progressions with ChangeNotifier {
     notifyListeners();
   }
 
-  List<ChordOption> createListFromText(String chordsAsText) {
-    List<ChordOption> chords = (chordsAsText.split(',')).map((text) => ChordOption(text)).toList();
+  List<Chord> createListFromText(String chordsAsText) {
+    List<Chord> chords = (chordsAsText.split(',')).map((text) => Chord(text)).toList();
     return chords;
   }
 
   static int idCounter = 5;
 
-  String formatChordsForDb(List<ChordOption> chords) {
+  String formatChordsForDb(List<Chord> chords) {
     String chordsString = chords.map((e) => e.name).toList().toString();
     return chordsString.substring(1, chordsString.length - 1);
   }

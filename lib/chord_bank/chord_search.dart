@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/models/chord.dart';
 import '../search_box.dart';
 import '../chord_names.dart' as chordNames;
 import '../utils.dart';
@@ -66,7 +67,7 @@ class _ChordState extends State<ChordSearch> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 SearchBox(_updateChord, screenData.screenWidth * 0.7),
-                chordImage
+                chordImage,
               ],
             ),
     );
