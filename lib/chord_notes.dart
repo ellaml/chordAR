@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/models/chord.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -70,8 +71,30 @@ Future<String> getPathToSaveFrame() async {
   return newPath;
 }
 
-Future<String> fetchNotesInfoByPathOfFrame(String framePath) async {
+Future<void> saveChordPositionInFile(String chordName) async {
+  String dirPath = await getApplicationDocumentsDirectory()
+      .then((Directory dir) => dir.path);
+  List<String> folders = dirPath.split("/");
+  String newPath = "";
+
+  for (int i = 1; i < folders.length; i++) {
+    String folder = folders[i];
+    if (folder != "app_flutter") {
+      newPath += "/" + folder;
+    } else {
+      break;
+    }
+  }
+  newPath += "/files/chaquopy/AssetFinder/app/position.txt"; //override?
+  print("newPath:" + newPath);
+  final file = File('$newPath');
+  file.writeAsString(Chord.getChordPosition(chordName));
+  return;
+}
+
+Future<String> fetchNotesInfoByPathOfFrame(String framePath, String chordName) async {
   String path = await getPathToSaveFrame();
+  await saveChordPositionInFile(chordName);
   File(framePath).copy(path);
   var outputMap = await Chaquopy.executeCode("script.py");
   print(outputMap['textOutputOrError'].toString());
@@ -105,9 +128,9 @@ String cleanStringForJson(String str) {
       RegExp(r'^.*?{"notes_coordinates"'), '{"notes_coordinates"');
 }
 
-Future<List<Widget>> createNoteWidgetsByFrame(String framePath, double top,
+Future<List<Widget>> createNoteWidgetsByFrame(String chordName, String framePath, double top,
     double left, double width, double height) async {
-  String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath);
+  String listOfNotesInfoStr = await fetchNotesInfoByPathOfFrame(framePath, chordName);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   print("stringC: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];

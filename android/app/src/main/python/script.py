@@ -20,6 +20,8 @@ def mainTextCode(code):
     a = os.path.dirname(__file__)
 
     filename = os.path.join(a,"c.jpeg")
+    chord_position_file = os.path.join(a, "position.txt")
+    print(chord_position_file)
     #enhance_image(filename)
     #filename = os.path.join(a,"d.jpeg")
     #my_file = Path(filename)
@@ -45,7 +47,11 @@ def mainTextCode(code):
     #         print(rf"{filename} : {e}")
     try:
         guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
-        coordinates = guitar.get_chord_coordinates(Emaj_chord)
+        file = open(chord_position_file)
+        chord_position = chord_position_file.read().replace("\n"," ")
+        file.close()
+        print(chord_position)
+        coordinates = guitar.get_chord_coordinates(chord_position)
         coordinates = guitar.get_chord_coordinates_relative(coordinates)
         print(buildJson(coordinates))
     except Exception as e:
