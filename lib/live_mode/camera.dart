@@ -35,7 +35,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     final topAddition = 80.0; //app bar
     final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
-    listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+    listOfChordPointsWidgets = await createNoteWidgetsByFrame('F#m', xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
     await removeFile(xfile.path);
   }
 
