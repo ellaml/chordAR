@@ -89,6 +89,9 @@ Future<void> saveChordPositionInFile(String chordName) async {
   print("newPath:" + newPath);
   final file = File('$newPath');
   file.writeAsString(Chord.getChordPosition(chordName));
+  //var syncPath = await newPath;
+  //var exists =  await File(syncPath).exists();
+  //final contents = await file.readAsString();
   return;
 }
 
