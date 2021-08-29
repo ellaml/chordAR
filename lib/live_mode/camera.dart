@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
+import 'package:flutter_complete_guide/settings/chords_voice_recognition.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter_complete_guide/globals.dart' as globals;
+
 
 enum CameraType
 {
@@ -35,7 +38,14 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     final topAddition = 80.0; //app bar
     final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
-    listOfChordPointsWidgets = await createNoteWidgetsByFrame('F#m', xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+    if(globals.isMicTurnedOn)
+    {
+        if(globals.chord != "")
+        {
+          print("Hiii the chord is: " + globals.chord);
+          listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord, xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+        }
+    }
     await removeFile(xfile.path);
   }
 
@@ -128,12 +138,23 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           automaticallyImplyLeading: true,
           elevation: 0,
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: SpeechScreen(),
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
           child: Stack(
             key: this._stackKey,
             children: [
+             /* Positioned(
+                  child: Container(height:20, width:40, child: Text(globals.chord, style: TextStyle(fontSize: 30, color: Colors.green))),
+                  left: screenWidth / 2,
+                  top: 0
+              )*/
+              Align(
+                alignment: Alignment.topRight,
+                child: Text(globals.chord),
+              ),
               CameraPreview(_controller),
               //Image.asset('assets/images/g70.png'), //Testing static image
               ...listOfChordPointsWidgets,  //TODO

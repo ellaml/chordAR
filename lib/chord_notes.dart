@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/models/chord.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,7 +53,7 @@ List<Point> convJsonToListOfNotesCoordinates(String listOfNotesInfoStr) {
   return createPointsListFromJson(listOfNotesCoordinatesJson, numOfNotes);
 }
 
-Future<String> getPathToSaveFrame() async {
+Future<String> getBasePathToSaveFrame() async {
   String dirPath = await getApplicationDocumentsDirectory()
       .then((Directory dir) => dir.path);
   List<String> folders = dirPath.split("/");
@@ -66,26 +67,21 @@ Future<String> getPathToSaveFrame() async {
       break;
     }
   }
-  newPath += "/files/chaquopy/AssetFinder/app/c.jpeg";
+  newPath += "/files/chaquopy/AssetFinder/app/";
+  return newPath;
+}
+
+
+Future<String> getPathToSaveFrame() async {
+  String newPath = await getBasePathToSaveFrame();
+  newPath += "c.jpeg";
   print("newPath:" + newPath);
   return newPath;
 }
 
 Future<void> saveChordPositionInFile(String chordName) async {
-  String dirPath = await getApplicationDocumentsDirectory()
-      .then((Directory dir) => dir.path);
-  List<String> folders = dirPath.split("/");
-  String newPath = "";
-
-  for (int i = 1; i < folders.length; i++) {
-    String folder = folders[i];
-    if (folder != "app_flutter") {
-      newPath += "/" + folder;
-    } else {
-      break;
-    }
-  }
-  newPath += "/files/chaquopy/AssetFinder/app/position.txt"; //override?
+  String newPath = await getBasePathToSaveFrame();
+  newPath += "position.txt";
   print("newPath:" + newPath);
   final file = File('$newPath');
   file.writeAsString(Chord.getChordPosition(chordName));

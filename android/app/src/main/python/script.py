@@ -8,6 +8,7 @@ from utils.guitar_image import GuitarImage
 
 
 def mainTextCode(code):
+    print("A5")
     #Emaj_chord = "x,7,6,4,5,4"
     a = os.path.dirname(__file__)
 

@@ -1,3 +1,4 @@
+import math
 from itertools import zip_longest
 from operator import itemgetter
 
@@ -15,18 +16,21 @@ def cm_to_pixels(cm: float):
 
 
 def fret_detection(cropped_neck_img: Image) -> np.array:
-    edges = cv2.Sobel(cropped_neck_img.blur_gray, cv2.CV_64F, 1, 0)
+    gray = cropped_neck_img.img_to_gray(cropped_neck_img.color_img)
+    gray = Image.enhance_gray_image(gray_img=gray)
+    # edges = cv2.Sobel(cropped_neck_img.blur_gray, cv2.CV_64F, 1, 0)
+    edges = cv2.Sobel(gray, cv2.CV_64F, 1, 0)
+    # edges = cv2.Canny(image=cropped_neck_img.blur_gray, threshold1=20, threshold2=240)
+    # edges = cv2.Canny(image=gray, threshold1=20, threshold2=180)
     edges1 = apply_threshold(img=edges, threshold=90)
     edges2 = apply_threshold(img=edges, threshold=20)
-    # edges = cv2.adaptiveThreshold(src=edges.astype(np.uint8), dst=edges, maxValue=255, adaptiveMethod=cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-    #                               thresholdType=cv2.THRESH_BINARY_INV, blockSize=4257, C=10)
     kernel = np.ones((5, 5), np.uint8)
     closing1 = cv2.morphologyEx(edges1, cv2.MORPH_CLOSE, kernel)
-    lines1 = cv2.HoughLinesP(image=closing1.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=15,
+    lines1 = cv2.HoughLinesP(image=closing1.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
                              minLineLength=cropped_neck_img.height * 0.5, maxLineGap=10)
     closing2 = cv2.morphologyEx(edges2, cv2.MORPH_CLOSE, kernel)
-    lines2 = cv2.HoughLinesP(image=closing2.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=15,
-                             minLineLength=cropped_neck_img.height * 0.25, maxLineGap=10)
+    lines2 = cv2.HoughLinesP(image=closing2.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
+                             minLineLength=cropped_neck_img.height * 0.1, maxLineGap=10)
 
     lines1 = [line[0] for line in lines1 if 1.01 * line[0][2] >= line[0][0] >= 0.99 * line[0][2]]
     lines2 = [line[0] for line in lines2 if 1.01 * line[0][2] >= line[0][0] >= 0.99 * line[0][2]]
@@ -45,11 +49,75 @@ def fret_detection(cropped_neck_img: Image) -> np.array:
         y2 = line[3] if 1.05 * avg_high_y >= line[3] >= 0.95 * avg_high_y else avg_high_y + 5
         cv2.line(img=cropped_neck_img.color_img, pt1=(x1, y1), pt2=(x2, y2), color=(0, 255, 0),
                  thickness=int(cropped_neck_img.width * 0.002))
-    cropped_neck_img.plot_img()
-    plt.show()
-    # calculate_fret_gaps(detected_frets=[itemgetter(0, 2)(x) for x in lines])
     return lines
 
+
+def fret_detection_with_hough_lines(cropped_neck_img: Image) -> np.array:
+    gray = cropped_neck_img.img_to_gray(cropped_neck_img.color_img)
+    # dst = cv2.Sobel(src=gray, ddepth=cv2.CV_8U, dx=1, dy=0)
+    dst = cv2.Canny(image=gray, threshold1=50, threshold2=200, apertureSize=3)
+    # kernel = np.ones((5, 5), np.uint8)
+    # dst = cv2.morphologyEx(dst, cv2.MORPH_CLOSE, kernel)
+    cdst = cv2.cvtColor(dst, cv2.COLOR_GRAY2BGR)
+    cdstP = np.copy(cdst)
+    height = cropped_neck_img.height
+    width = cropped_neck_img.width
+    lines = cv2.HoughLines(image=dst.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=80)
+    vertical_lines = []
+    horizontal_lines = []
+    if lines is not None:
+        for i in range(0, len(lines)):
+            rho = lines[i][0][0]
+            theta = lines[i][0][1]
+            a = math.cos(theta)
+            b = math.sin(theta)
+            x0 = a * rho
+            y0 = b * rho
+            pt1 = (int(x0 + 1000*(-b)), int(y0 + 1000*(a)))
+            pt2 = (int(x0 - 1000*(-b)), int(y0 - 1000*(a)))
+
+            if pt2[0] - pt1[0] != 0:
+                slope = (pt2[1] - pt1[1]) / (pt2[0] - pt1[0])
+            else:
+                slope = 100000
+            y_axis_intr = pt1[1] - slope * pt1[0]
+            if math.fabs(slope) < 4:
+                y_in_middle = slope * width / 2 + y_axis_intr
+                horizontal_lines.append((slope,
+                                         y_axis_intr,
+                                         (abs(pt1[0]), abs(pt1[1])),
+                                         (abs(pt2[0]),abs(pt2[1])),
+                                         y_in_middle))
+            else:
+                x_in_middle = (height / 2 - y_axis_intr) / slope
+                vertical_lines.append((slope,
+                                       y_axis_intr,
+                                       pt1, #(abs(pt1[0]), abs(pt1[1])),
+                                       pt2, #(abs(pt2[0]), abs(pt2[1])),
+                                       x_in_middle))
+
+    # vertical_lines = [[line[2], line[3]] for line in vertical_lines] #if 1.4 * line[2][0] >= line[3][0] >= 0.6 * line[2][0]]
+
+    lines = sorted(vertical_lines, key=lambda line: line[4]) # changed to mid X
+
+    #
+    # for line in lines:
+    #     cv2.line(cropped_neck_img.color_img, line[2], line[3], (0,0,255), 3, cv2.LINE_AA)
+
+    lines = remove_duplicate_vertical_lines_test(lines=lines)
+
+    lines = [[line[2], line[3]] for line in
+             lines]  # if 1.4 * line[2][0] >= line[3][0] >= 0.6 * line[2][0]]
+
+    for line in lines:
+        cv2.line(cropped_neck_img.color_img, line[0], line[1], (0,0,255), 3, cv2.LINE_AA)
+    #     cv2.imshow(str(line[0]) + " " + str(line[1]), cdst)
+    #     cv2.waitKey()
+    # #
+    # plt.imshow(cdst)
+    # # cv2.imshow("Detected lines - Probabilistic Houh Line Transform", cdstP)
+    # plt.show()
+    return lines
 
 def calculate_fret_gaps(detected_frets, number_of_frets=19):
     scale_length = 65
@@ -69,12 +137,32 @@ def calculate_fret_gaps(detected_frets, number_of_frets=19):
 
 def remove_duplicate_vertical_lines(lines, width):
     new_lines = []
-    thresh = width * 0.008
-    print(thresh)
+    thresh = 37 # width * 0.0099
     lines_pairwise = zip(lines[:len(lines)], lines[1:])
     for line1, line2 in lines_pairwise:
-        if line2[0] - line1[0] > thresh:
+        if line2[0][0] - line1[0][0] > thresh or line2[1][0] - line1[1][0] > thresh:
             new_lines.append(line1)
-    if lines[-1][0] - new_lines[-1][0] > thresh:
+    if lines[-1][0][0] - new_lines[-1][0][0] > thresh or lines[-1][1][0] - new_lines[-1][1][0] > thresh:
         new_lines.append(lines[-1])
+    return new_lines
+
+
+def remove_duplicate_vertical_lines_test(lines):
+    # uses mid X instead of point, so expects lines in format of the original tuple with 5 parts
+
+    new_lines = []
+    min_gap_first_frets = 45 # width * 0.0099
+    min_gap_last_frets = 30
+    max_gap = 160
+    lines_pairwise = zip(lines[:len(lines)], lines[1:])
+    # TODO: find a way to avoid ignoring a fret due to many lines with small gap (skipped due to pairs)
+    # example: |...|.|.|.|..  -> only two are taken though there are three. maybe compare to last saved fret instead
+    for line1, line2 in lines_pairwise:
+        gap = min_gap_first_frets if len(new_lines) < 6 else min_gap_last_frets
+        if max_gap > line2[4] - line1[4] > gap:
+            new_lines.append(line1)
+    if max_gap > lines[-1][4] - new_lines[-1][4] > min_gap_last_frets:
+        new_lines.append(lines[-1])
+
+    # TODO: if one gap is more than 160 after this raise an error that tells the user to remove his bloody hands
     return new_lines
