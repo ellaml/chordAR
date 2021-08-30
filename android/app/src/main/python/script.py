@@ -8,19 +8,22 @@ from utils.guitar_image import GuitarImage
 
 
 def mainTextCode(code):
-    print("A5")
-    #Emaj_chord = "x,7,6,4,5,4"
+    Emaj_chord = "x,7,6,4,5,4"
     a = os.path.dirname(__file__)
-
-    filename = os.path.join(a,"c.jpeg")
+    filename = os.path.join(a,"a.jpeg")
+    #filename = os.path.join(a,"c.jpeg")
     chord_position_file = os.path.join(a, "position.txt")
 
     try:
         file = open(chord_position_file)
         chord_position = file.read().replace("\n"," ")
+        print("Chord position:")
+        print(chord_position)
         guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
         file.close()
         coordinates = guitar.get_chord_coordinates(chord_position)
+        print("Coordinates before adjusting to screen:")
+        print(coordinates)
         coordinates = guitar.get_chord_coordinates_relative(coordinates)
         print(buildJson(coordinates))
     except Exception as e:

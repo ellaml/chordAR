@@ -155,8 +155,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                 alignment: Alignment.topRight,
                 child: Text(globals.chord),
               ),
-              CameraPreview(_controller),
-              //Image.asset('assets/images/g70.png'), //Testing static image
+              //CameraPreview(_controller),
+              Image.asset('assets/images/a.jpeg'), //Testing static image
               ...listOfChordPointsWidgets,  //TODO
             ],
           ),
