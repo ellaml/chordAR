@@ -63,6 +63,7 @@ flutter:
   assets:
      - assets/images/g70.png
      - assets/images/a.jpeg
+     - assets/images/01.jpg
      - assets/images/logo.png
      - assets/logo/logo.png
      - assets/logo/logo-outline.png

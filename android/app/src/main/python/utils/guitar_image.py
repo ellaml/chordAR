@@ -63,7 +63,7 @@ class GuitarImage(Image):
         note_by_string = chord_to_draw.split(',')
         drawing_coordinates = []
         for string, fret in enumerate(note_by_string):
-            if fret != 'x' and string <= len(self.strings) - 1:
+            if fret != 'x' and fret != '0' and string <= len(self.strings) - 1:
                 y = self.strings[int(string)] + self.crop_area.higher_y
                 x = self.frets[int(fret) - 1]
                 restored_coordinate = self.restore_coordinates(rotated_X=x, rotated_Y=y, center=self.image_center)
@@ -79,7 +79,7 @@ class GuitarImage(Image):
         return drawing_coordinates
 
     def get_chord_coordinates_relative(self, chord_coordinates: List[Coordinate]) -> List[Coordinate]:
-        return [self.Coordinate(x * 100 / self.height, y * 100 / self.width) for (x,y) in chord_coordinates]
+        return [self.Coordinate(x / float(self.width), y / float(self.height)) for (x, y) in chord_coordinates]
 
     def crop_neck(self) -> Tuple[Image, int, int]:
         edges = cv2.Canny(image=self.rotated.blur_gray, threshold1=20, threshold2=90)

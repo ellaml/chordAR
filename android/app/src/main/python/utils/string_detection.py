@@ -85,17 +85,17 @@ def string_detection_with_hough_lines(cropped_neck_img: Image, fret_lines):
 
         # left the comments here to easily compare to original lines when debugging
 
-        # without_removing = horizontal_lines
+        without_removing = horizontal_lines
         horizontal_lines = remove_duplicate_horizontal_lines_test_2(horizontal_lines)
 
         horizontal_lines = [[line[2], line[3]] for line in horizontal_lines]  # if line[0] >= 0]
-        # without_removing = [[line[2], line[3]] for line in without_removing] # if line[0] >= 0]
+        without_removing = [[line[2], line[3]] for line in without_removing] # if line[0] >= 0]
         lines = sorted(horizontal_lines, key=lambda line: line[0][1])
-        # without_removing = sorted(without_removing, key=lambda line: line[0][1])
+        without_removing = sorted(without_removing, key=lambda line: line[0][1])
         # lines = np.array(remove_duplicate_horizontal_lines(lines=lines, height=height))
 
-        # for line in without_removing:
-        # cv2.line(cropped_neck_img.color_img, line[0], line[1], (0, 255, 0), 3, cv2.LINE_AA)
+        for line in without_removing:
+            cv2.line(cropped_neck_img.color_img, line[0], line[1], (0, 255, 0), 3, cv2.LINE_AA)
 
         for line in lines:
             cv2.line(cropped_neck_img.color_img, line[0], line[1], (255, 0, 0), 3, cv2.LINE_AA)
@@ -109,12 +109,13 @@ def remove_duplicate_horizontal_lines_test_2(lines):  # returns a filtered group
     last_line_y = None
     six_groups = [[]]
     for line in sorted_lines:
-        if last_line_y is not None and line[4] - last_line_y > 10:
+        if last_line_y is not None and line[4] - last_line_y > 10:  # was last_line
             six_groups.append([])
             current_group += 1
 
         six_groups[current_group].append(line)
         last_line_y = line[4]
+        # last_group_first_line_y = six_groups[current_group][0][4]
 
     # take only 6 groups (avoid last one in the bottom of the neck)
     if len(six_groups) > 6:

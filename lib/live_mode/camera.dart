@@ -40,11 +40,13 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     XFile xfile = await _controller?.takePicture();
     if(globals.isMicTurnedOn)
     {
-        if(globals.chord != "")
+        if(globals.chord != null && globals.chord != "")
         {
           print("Hiii the chord is: " + globals.chord);
           listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord, xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
         }
+        //listOfChordPointsWidgets = await createNoteWidgetsByFrame('F#m', xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+
     }
     await removeFile(xfile.path);
   }
@@ -122,6 +124,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     this.screenWidth = screenData.screenWidth;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Theme
               .of(context)
@@ -151,12 +154,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                   left: screenWidth / 2,
                   top: 0
               )*/
-              Align(
-                alignment: Alignment.topRight,
-                child: Text(globals.chord),
-              ),
-              //CameraPreview(_controller),
-              Image.asset('assets/images/a.jpeg'), //Testing static image
+              // Align(
+              //   alignment: Alignment.topRight,
+              //   child: Text(globals.chord),
+              // ),
+              CameraPreview(_controller),
+              //Image.asset('assets/images/01.jpg'), //Testing static image
               ...listOfChordPointsWidgets,  //TODO
             ],
           ),

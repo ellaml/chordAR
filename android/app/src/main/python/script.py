@@ -10,8 +10,8 @@ from utils.guitar_image import GuitarImage
 def mainTextCode(code):
     Emaj_chord = "x,7,6,4,5,4"
     a = os.path.dirname(__file__)
-    filename = os.path.join(a,"a.jpeg")
-    #filename = os.path.join(a,"c.jpeg")
+    #filename = os.path.join(a,"01.jpg")
+    filename = os.path.join(a,"c.jpeg")
     chord_position_file = os.path.join(a, "position.txt")
 
     try:

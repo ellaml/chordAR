@@ -9,10 +9,12 @@ import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
-Widget createNoteWidget(Point point, double top, double left, double width, double height) {
+Widget createNoteWidget(Point point, double top_add, double left_add, double width, double height) {
+ // var new_left =  point.x.toDouble() / 100 * width + left_add;
+  //var new_top = point.y.toDouble() / 100 * height + top_add;
   return Positioned(
-    left: point.x.toDouble() / 100 * width + left,
-    top: point.y.toDouble() / 100 * height + top, // change - its always right after the appbar
+    left: point.x.toDouble() * width,//new_left,
+    top: point.y.toDouble() * height,//new_top, // change - its always right after the appbar
     child: Container(
       width: WIDTH_NOTE,
       height: HEIGHT_NOTE,

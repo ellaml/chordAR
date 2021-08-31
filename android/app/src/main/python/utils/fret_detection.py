@@ -27,7 +27,7 @@ def fret_detection(cropped_neck_img: Image) -> np.array:
     kernel = np.ones((5, 5), np.uint8)
     closing1 = cv2.morphologyEx(edges1, cv2.MORPH_CLOSE, kernel)
     lines1 = cv2.HoughLinesP(image=closing1.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
-                             minLineLength=cropped_neck_img.height * 0.5, maxLineGap=10)
+                            minLineLength=cropped_neck_img.height * 0.5, maxLineGap=10)
     closing2 = cv2.morphologyEx(edges2, cv2.MORPH_CLOSE, kernel)
     lines2 = cv2.HoughLinesP(image=closing2.astype(np.uint8), rho=1, theta=np.pi / 180, threshold=18,
                              minLineLength=cropped_neck_img.height * 0.1, maxLineGap=10)
@@ -107,7 +107,7 @@ def fret_detection_with_hough_lines(cropped_neck_img: Image) -> np.array:
     lines = remove_duplicate_vertical_lines_test(lines=lines)
 
     lines = [[line[2], line[3]] for line in
-             lines]  # if 1.4 * line[2][0] >= line[3][0] >= 0.6 * line[2][0]]
+                      lines]  # if 1.4 * line[2][0] >= line[3][0] >= 0.6 * line[2][0]]
 
     for line in lines:
         cv2.line(cropped_neck_img.color_img, line[0], line[1], (0,0,255), 3, cv2.LINE_AA)
