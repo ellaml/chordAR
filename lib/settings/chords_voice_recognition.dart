@@ -48,7 +48,22 @@ class _SpeechScreenState extends State<SpeechScreen> {
     s = s.replaceAll('-', '');
     s = s.replaceAll(RegExp('\\s+'), '');
     s = s.replaceAll(RegExp('sharp'), '#');
-    s = capitalize(s);
+    if(s == "see")
+    {
+      s="C";
+    }
+    else if(s == "be")
+    {
+      s="B";
+    }
+    else if(s == "if")
+    {
+      s="F";
+    }
+    else
+    {
+      s = capitalize(s);
+    }
     return s;
   }
   void _listen() async {
