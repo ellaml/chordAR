@@ -48,7 +48,23 @@ class _SpeechScreenState extends State<SpeechScreen> {
     s = s.replaceAll('-', '');
     s = s.replaceAll(RegExp('\\s+'), '');
     s = s.replaceAll(RegExp('sharp'), '#');
-    s = capitalize(s);
+    if(s == "see")
+    {
+      s="C";
+    }
+    else if(s == "be")
+    {
+      s="B";
+    }
+    else if(s == "if")
+    {
+      s="F";
+    }
+    else
+    {
+      s = capitalize(s);
+    }
+    
     return s;
   }
   void _listen() async {
@@ -70,10 +86,12 @@ class _SpeechScreenState extends State<SpeechScreen> {
               globals.chordIsValid=true;
               globals.chord=_text;
               print("chord " + _text + " exists");
+              globals.voiceError = "";
             }
             else {
               globals.chordIsValid=false;
               print(_text + " isn't a valid chord");
+              globals.voiceError = _text + " isn't a valid chord"; 
             }
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;

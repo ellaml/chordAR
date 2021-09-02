@@ -12,12 +12,7 @@ import 'package:wakelock/wakelock.dart';
 import '../app_colors.dart' as appColors;
 import 'chord_title.dart';
 
-
-enum CameraType
-{
-  ONE,
-  TWO
-}
+enum CameraType { ONE, TWO }
 
 class Camera extends StatefulWidget {
   _CameraState createState() => _CameraState();
@@ -34,22 +29,23 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
-    final RenderBox renderBox = this._stackKey.currentContext.findRenderObject();
+    final RenderBox renderBox =
+        this._stackKey.currentContext.findRenderObject();
     final cameraHeight = renderBox.size.height;
     final cameraWidth = renderBox.size.width;
 
     final topAddition = 80.0; //app bar
     final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
-    if(globals.isMicTurnedOn)
-    {
-        if(globals.chord != null && globals.chord != "")
-        {
-          print("The chord is: " + globals.chord);
-          listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord, xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-        }
-        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A", xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-
+    if (globals.progressionMode || globals.isMicTurnedOn) {
+      if (globals.chord != null && globals.chord != "") {
+        print("The chord is: " + globals.chord);
+        listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord,
+            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+      } else {
+        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
+            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+      }
     }
     await removeFile(xfile.path);
   }
@@ -66,18 +62,36 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     setupCamera();
     Wakelock.enable(); // turn off auto-sleep
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
-      setState(() {
-        _updateListOfChordPointWidgets();
+    var i = 0;
+    if (globals.progressionMode) {
+        _timer = Timer.periodic(Duration(seconds: globals.currentProg.interval), (Timer t) {
+          if(i < globals.currentProg.chords.length)
+          {
+            globals.chord = globals.currentProg.chords[i].name;
+            i++;
+            setState(() {
+              _updateListOfChordPointWidgets();
+            });
+          }
+          else
+          {
+            i=0;
+          }
+        });
+    } else {
+      _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
+        setState(() {
+          _updateListOfChordPointWidgets();
+        });
       });
-    });
+    }
+
     //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
     //  _saveImgToGallery();
     //});
     //
     //Fix for length and not mirroring in tablet
-    if(_cameraType == CameraType.TWO)
-    {
+    if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
@@ -90,8 +104,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   @override
   void dispose() {
     //Fix for length and not mirroring in tablet
-    if(_cameraType == CameraType.TWO)
-    {
+    if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeRight,
         DeviceOrientation.landscapeLeft,
@@ -129,13 +142,11 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     this.screenWidth = screenData.screenWidth;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Theme
-              .of(context)
-              .backgroundColor,
+          backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
-          title: Text("Live Mode",
+          title: Text(globals.progressionMode ? "Progression" : "Live Mode",
               style: TextStyle(
                   fontSize: screenData.isBigDevice ? 32 : 24,
                   color: Colors.white)),
@@ -146,34 +157,41 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           automaticallyImplyLeading: true,
           elevation: 0,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: SpeechScreen(),
+        floatingActionButtonLocation: globals.progressionMode
+            ? Container(
+                width: 0,
+                height: 0,
+              )
+            : FloatingActionButtonLocation.endFloat,
+        floatingActionButton: globals.progressionMode
+            ? Container(
+                width: 0,
+                height: 0,
+              )
+            : SpeechScreen(),
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
-          child: Stack(
-            key: this._stackKey,
-            children: [
-              CameraPreview(_controller),
-              //Image.asset('assets/images/01.jpg'), //Testing static image
-              ...listOfChordPointsWidgets,
-              ChordTitle(globals.chord)
-            ],
-          ),
-        ));
+                child: Stack(
+                  key: this._stackKey,
+                  children: [
+                    CameraPreview(_controller),
+                    //Image.asset('assets/images/01.jpg'), //Testing static image
+                    ...listOfChordPointsWidgets,
+                    ChordTitle(globals.chord)
+                  ],
+                ),
+              ));
   }
 
-
-  void setupCamera()
-  {
+  void setupCamera() {
     availableCameras().then((data) {
       setState(() {
         if (data.length >= 2) {
           print("two cameras");
           _cameraType = CameraType.TWO;
           _selectedCamera = data[1];
-        }
-        else {
+        } else {
           print("one camera");
           _cameraType = CameraType.ONE;
           _selectedCamera = data[0];
@@ -187,7 +205,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   selectCamera() async {
     var controller =
-      CameraController(_selectedCamera, ResolutionPreset.ultraHigh);
+        CameraController(_selectedCamera, ResolutionPreset.ultraHigh);
 
     await controller.initialize();
     return controller;
