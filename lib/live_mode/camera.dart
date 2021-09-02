@@ -66,7 +66,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     setupCamera();
     Wakelock.enable(); // turn off auto-sleep
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
