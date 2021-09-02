@@ -10,9 +10,8 @@ const String NUM_NOTES_JSON_KEY = 'numOfNotes';
 const String X_JSON_KEY = 'x';
 const String Y_JSON_KEY = 'y';
 const String NOTES_COORDINAES_JSON_KEY = 'notes_coordinates';
-const double WIDTH_NOTE = 15;
-const double HEIGHT_NOTE = 15;
-const Color COLOR_NOTE = Colors.red;
+const double SIZE_NOTE = 17;
+const Color COLOR_NOTE = const Color(0xFF80ffd4);
 const BoxShape NOTE_SHAPE = BoxShape.circle;
 
 /*

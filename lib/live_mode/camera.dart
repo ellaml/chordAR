@@ -8,6 +8,9 @@ import 'package:flutter_complete_guide/settings/chords_voice_recognition.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_complete_guide/globals.dart' as globals;
+import 'package:wakelock/wakelock.dart';
+import '../app_colors.dart' as appColors;
+import 'chord_title.dart';
 
 
 enum CameraType
@@ -42,10 +45,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     {
         if(globals.chord != null && globals.chord != "")
         {
-          print("Hiii the chord is: " + globals.chord);
+          print("The chord is: " + globals.chord);
           listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord, xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
         }
-        //listOfChordPointsWidgets = await createNoteWidgetsByFrame('F#m', xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A", xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
 
     }
     await removeFile(xfile.path);
@@ -61,6 +64,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     setupCamera();
+    Wakelock.enable(); // turn off auto-sleep
     WidgetsBinding.instance.addObserver(this);
     _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
       setState(() {
@@ -97,6 +101,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     }
     //End of Fix for length and not mirroring in tablet
 
+    Wakelock.disable(); // turn on auto-sleep again
     WidgetsBinding.instance.addObserver(this);
     _timer.cancel();
     _timer = null;
@@ -149,22 +154,15 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           child: Stack(
             key: this._stackKey,
             children: [
-             /* Positioned(
-                  child: Container(height:20, width:40, child: Text(globals.chord, style: TextStyle(fontSize: 30, color: Colors.green))),
-                  left: screenWidth / 2,
-                  top: 0
-              )*/
-              // Align(
-              //   alignment: Alignment.topRight,
-              //   child: Text(globals.chord),
-              // ),
               CameraPreview(_controller),
               //Image.asset('assets/images/01.jpg'), //Testing static image
-              ...listOfChordPointsWidgets,  //TODO
+              ...listOfChordPointsWidgets,
+              ChordTitle(globals.chord)
             ],
           ),
         ));
   }
+
 
   void setupCamera()
   {

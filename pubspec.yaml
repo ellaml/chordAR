@@ -27,6 +27,7 @@ dependencies:
   drag_and_drop_gridview:
   dotted_border: ^2.0.0+1
   path_provider: ^2.0.2
+  animated_text_kit: ^4.2.1
   path: ^1.8.0
   chaquopy: ^0.0.11
 
@@ -42,6 +43,8 @@ dependencies:
   speech_to_text: ^2.3.0
   highlight_text: ^0.7.2
   avatar_glow: ^1.2.0
+  screen: ^0.0.5
+  wakelock: ^0.5.3+3
 
 dev_dependencies:
   flutter_test:
