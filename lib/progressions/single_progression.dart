@@ -28,17 +28,17 @@ class SingleProgression extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
               onTap: () {
-                                Navigator.of(context).pushNamed(EditProgressionScreen.routeName,
-                    arguments: this.id);
+                    //             Navigator.of(context).pushNamed(EditProgressionScreen.routeName,
+                    // arguments: this.id);
 
-                // print("JAFJWAOSK");
-                // globals.progressionMode = true;
-                // globals.currentProg =
-                //     Provider.of<Progressions>(context, listen: false)
-                //         .findById(id);
-                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //   return Camera();
-                // }));
+                print("JAFJWAOSK");
+                globals.progressionMode = true;
+                globals.currentProg =
+                    Provider.of<Progressions>(context, listen: false)
+                        .findById(id);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Camera();
+                }));
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),

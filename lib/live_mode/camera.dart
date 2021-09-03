@@ -64,27 +64,24 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     var i = 0;
     if (globals.progressionMode) {
-        _timer = Timer.periodic(Duration(seconds: globals.currentProg.interval), (Timer t) {
-          if(i < globals.currentProg.chords.length)
-          {
-            globals.chord = globals.currentProg.chords[i].name;
-            i++;
-            setState(() {
-              _updateListOfChordPointWidgets();
-            });
-          }
-          else
-          {
-            i=0;
-          }
-        });
-    } else {
-      _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
-        setState(() {
-          _updateListOfChordPointWidgets();
-        });
+      _timer = Timer.periodic(Duration(seconds: globals.currentProg.interval),
+          (Timer t) {
+        if (i < globals.currentProg.chords.length) {
+          globals.chord = globals.currentProg.chords[i].name;
+          i++;
+          setState(() {
+            _updateListOfChordPointWidgets();
+          });
+        } else {
+          i = 0;
+        }
       });
-    }
+    } // has to be 1 if we want to match every interval
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        _updateListOfChordPointWidgets();
+      });
+    });
 
     //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
     //  _saveImgToGallery();
@@ -158,10 +155,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           elevation: 0,
         ),
         floatingActionButtonLocation: globals.progressionMode
-            ? Container(
-                width: 0,
-                height: 0,
-              )
+            ? null
             : FloatingActionButtonLocation.endFloat,
         floatingActionButton: globals.progressionMode
             ? Container(

@@ -70,7 +70,7 @@ class Progressions with ChangeNotifier {
   }
 
   List<Chord> createListFromText(String chordsAsText) {
-    List<Chord> chords = (chordsAsText.split(',')).map((text) => Chord(text)).toList();
+    List<Chord> chords = (chordsAsText.split(', ')).map((text) => Chord(text)).toList();
     return chords;
   }
 
