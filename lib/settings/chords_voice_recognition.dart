@@ -64,7 +64,6 @@ class _SpeechScreenState extends State<SpeechScreen> {
     {
       s = capitalize(s);
     }
-    
     return s;
   }
   void _listen() async {

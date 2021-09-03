@@ -39,13 +39,14 @@ class GuitarImage(Image):
         #     (0, 187, 255),
         #     int(self.cropped.width * 0.002))
 
-        self.cropped.plot_img()
+        # self.cropped.plot_img()
         # crop_res2 = self.crop_neck_with_hough_lines()  # crop_neck_with_hough_lines()
         # self.crop_area_2 = self.Crop_Area(crop_res2[1], crop_res2[2])
         # self.cropped_2 = crop_res2[0]
-        detected_strings = string_detection_with_hough_lines(cropped_neck_img=self.cropped, fret_lines=detected_frets)
-        self.cropped.plot_img()
-        self.strings = [(string[0][1] + string[1][1]) // 2 for string in detected_strings]
+        self.strings = string_detection_with_hough_lines(cropped_neck_img=self.cropped, fret_lines=detected_frets)
+        # self.cropped.plot_img()
+        # self.strings = [(string[0][1] + string[1][1]) // 2 for string in detected_strings]
+
 
     @staticmethod
     def calculate_frets_xs(detected_frets: Sized) -> List[int]:
@@ -64,8 +65,8 @@ class GuitarImage(Image):
         drawing_coordinates = []
         for string, fret in enumerate(note_by_string):
             if fret != 'x' and fret != '0' and string <= len(self.strings) - 1:
-                y = self.strings[int(string)] + self.crop_area.higher_y
                 x = self.frets[int(fret) - 1]
+                y = self.strings[int(string)](x) + self.crop_area.higher_y
                 restored_coordinate = self.restore_coordinates(rotated_X=x, rotated_Y=y, center=self.image_center)
                 drawing_coordinates.append(restored_coordinate)
                 cv2.circle(
