@@ -99,7 +99,7 @@ def string_detection_with_hough_lines(cropped_neck_img: Image, fret_lines):
 
         for line in lines:
             cv2.line(cropped_neck_img.color_img, line[0], line[1], (255, 0, 0), 3, cv2.LINE_AA)
-
+        lines = list(map(get_string_line_equation_func, lines))
         return lines
 
 
@@ -219,3 +219,10 @@ def enhance_gray_image_for_string_detection(gray_img):
     # plt.imshow(im,cmap='gray')
     # plt.show()
     return im
+
+
+def get_string_line_equation_func(string):
+    x1, y1 = string[0]
+    x2, y2 = string[1]
+    m = (y2 - y1) / (x2 - x1)
+    return lambda x: m * (x - x1) + y1
