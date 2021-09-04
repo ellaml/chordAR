@@ -11,7 +11,7 @@ class Chord {
       'Am',
       'B',
       'B7',
-      'Bb'
+      'Bb',
       'Bb7',
       'Bbm',
       'Bm',

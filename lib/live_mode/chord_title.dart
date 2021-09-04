@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/utils.dart';
-import 'package:path/path.dart';
 import '../app_colors.dart' as appColors;
-import 'package:animated_text_kit/animated_text_kit.dart';
 
 class ChordTitle extends StatefulWidget {
   String title = '';
@@ -22,7 +20,7 @@ class _ChordTitle extends State<ChordTitle> {
     ScreenData screenData = ScreenData(context);
     if (widget.title != "") {
       return Positioned(
-          left: 30,
+          left: 100,
           top: 30,
           child: SizedBox(
               child: Container(

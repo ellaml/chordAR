@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/models/chord.dart';
 import '../search_box.dart';
 import '../chord_names.dart' as chordNames;
 import '../utils.dart';
