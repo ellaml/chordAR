@@ -4,7 +4,6 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class Image:
     def __init__(self, img_path: Path=None, img=None):
         if img is None:
@@ -24,6 +23,9 @@ class Image:
         plt.imshow(self.color_img, interpolation='none') if not gray \
             else plt.imshow(self.gray, interpolation='none', cmap='gray')
         plt.show()
+
+    def save_img(self, step, i):
+        plt.imsave(fname=f"{i}_{step}.png", arr=self.color_img)
 
     @staticmethod
     def load_img(file_path):

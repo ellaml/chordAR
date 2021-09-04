@@ -1,0 +1,2 @@
+class FingersHidingNeckError(Exception):
+    pass

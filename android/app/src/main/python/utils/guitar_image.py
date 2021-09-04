@@ -18,35 +18,45 @@ from utils.string_detection import string_detection, string_detection_with_hough
 
 
 class GuitarImage(Image):
+    i = 1
     Crop_Area = namedtuple('Crop_Area', ['higher_y', 'lower_y'])
     Coordinate = namedtuple("Coordinate", ["x", "y"])
 
-    def __init__(self, **kwargs) -> None:  # , file_name:str=""):
+    def __init__(self, save_img=False, **kwargs) -> None:  # , file_name:str=""):
         Image.__init__(self, **kwargs)  # , file_name=file_name)
+        if save_img:
+            self.init_with_saving_imgs()
+        else:
+            self.color_img = cv2.flip(src=self.color_img, flipCode=1)
+            self.rotated, self.rotation_angle, self.image_center = self.rotate_img()
+            crop_res = self.crop_neck_with_hough_lines()
+            self.crop_area = self.Crop_Area(crop_res[1], crop_res[2])
+            self.cropped = crop_res[0]
+            detected_frets = fret_detection_with_hough_lines(cropped_neck_img=self.cropped)
+            self.frets = self.calculate_frets_xs(detected_frets=detected_frets)
+            self.strings = string_detection_with_hough_lines(cropped_neck_img=self.cropped, fret_lines=detected_frets)
+
+    def init_with_saving_imgs(self):
+        self.step = 1
         self.color_img = cv2.flip(src=self.color_img, flipCode=1)
+        self.save_img(step=f"{self.step}_initial_img", i=self.i)
+        self.step += 1
         self.rotated, self.rotation_angle, self.image_center = self.rotate_img()
-        crop_res = self.crop_neck_with_hough_lines() #crop_neck_with_hough_lines()
+        self.rotated.save_img(step=f"{self.step}_rotation", i=self.i)
+        self.step += 1
+        crop_res = self.crop_neck_with_hough_lines()  # crop_neck_with_hough_lines()
         self.crop_area = self.Crop_Area(crop_res[1], crop_res[2])
         self.cropped = crop_res[0]
-        detected_frets = fret_detection_with_hough_lines(cropped_neck_img=self.cropped) #fret_detection(cropped_neck_img=self.cropped)
+        self.cropped.save_img(step=f"{self.step}_crop", i=self.i)
+        self.step += 1
+        detected_frets = fret_detection_with_hough_lines(
+            cropped_neck_img=self.cropped)  # fret_detection(cropped_neck_img=self.cropped)
+        self.cropped.save_img(step=f"{self.step}_fret_detection", i=self.i)
+        self.step += 1
         self.frets = self.calculate_frets_xs(detected_frets=detected_frets)
-        # self.cropped.plot_img()
-        # height = self.cropped.height // 2
-        # for fret in self.frets:
-        #     cv2.line(self.cropped.color_img,
-        #     (fret, height),
-        #     (fret, height + 10),
-        #     (0, 187, 255),
-        #     int(self.cropped.width * 0.002))
-
-        # self.cropped.plot_img()
-        # crop_res2 = self.crop_neck_with_hough_lines()  # crop_neck_with_hough_lines()
-        # self.crop_area_2 = self.Crop_Area(crop_res2[1], crop_res2[2])
-        # self.cropped_2 = crop_res2[0]
         self.strings = string_detection_with_hough_lines(cropped_neck_img=self.cropped, fret_lines=detected_frets)
-        # self.cropped.plot_img()
-        # self.strings = [(string[0][1] + string[1][1]) // 2 for string in detected_strings]
-
+        self.cropped.save_img(step=f"{self.step}_string_detection", i=self.i)
+        self.step += 1
 
     @staticmethod
     def calculate_frets_xs(detected_frets: Sized) -> List[int]:
