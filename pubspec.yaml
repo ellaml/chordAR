@@ -74,6 +74,7 @@ flutter:
      - assets/logo/logo-title.png
      - assets/logo/cut-logo.png
      - assets/logo/logo-outline-title.png
+     - assets/icons/back-white64.png
      - assets/icons/open-book64.png
      - assets/icons/open-book128.png
      - assets/icons/process64.png

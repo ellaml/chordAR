@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/models/chord.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +10,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 
 Widget createNoteWidget(
-    Point point, double top_add, double left_add, double width, double height) {
+    Point point, double topAdd, double leftAdd, double width, double height) {
   return Positioned(
     left: point.x.toDouble() * width, //new_left,
     top: point.y.toDouble() *
@@ -99,6 +98,7 @@ Future<void> saveChordPositionInFile(String chordName) async {
   newPath += "position.txt";
   print("newPath:" + newPath);
   final file = File('$newPath');
+  // file.writeAsString(chordName + ',');
   file.writeAsString(Chord.getChordPosition(chordName));
   //var syncPath = await newPath;
   //var exists =  await File(syncPath).exists();
