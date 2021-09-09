@@ -172,7 +172,7 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     // print("Gallery: " + fileName.toString());
     // print("frame Path: " + framePath);
   }
-  await ImageGallerySaver.saveFile(framePath);
+  //await ImageGallerySaver.saveFile(framePath);
   //String pathToSaveFrame = await getPathToSaveFrame();
   //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 

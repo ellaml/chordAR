@@ -11,7 +11,7 @@ import 'package:flutter_complete_guide/globals.dart' as globals;
 import 'package:wakelock/wakelock.dart';
 import '../app_colors.dart' as appColors;
 import 'chord_title.dart';
-
+import 'package:flutter_isolate/flutter_isolate.dart';
 
 enum CameraType
 {
@@ -48,8 +48,9 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           print("The chord is: " + globals.chord);
           listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord, xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
         }
-        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A", xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-
+        else {
+            listOfChordPointsWidgets = await createNoteWidgetsByFrame("A", xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+        }
     }
     await removeFile(xfile.path);
   }
@@ -66,7 +67,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     setupCamera();
     Wakelock.enable(); // turn off auto-sleep
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });

@@ -45,6 +45,7 @@ dependencies:
   avatar_glow: ^1.2.0
   screen: ^0.0.5
   wakelock: ^0.5.3+3
+  flutter_isolate: ^2.0.0
 
 dev_dependencies:
   flutter_test:
