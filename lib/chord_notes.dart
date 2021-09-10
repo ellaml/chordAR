@@ -156,7 +156,8 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     double top,
     double left,
     double width,
-    double height) async {
+    double height,
+    int colorCode) async {
   String listOfNotesInfoStr =
       await fetchNotesInfoByPathOfFrame(framePath, chordName);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
@@ -175,7 +176,7 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
     UserPreferences prefs = UserPreferences();
-    int colorCodeForNotesWidgets = 0xFF80ffd4;//await prefs.getColorCode();
+    int colorCodeForNotesWidgets = colorCode;
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates, top,
         left, width, height, colorCodeForNotesWidgets);
 

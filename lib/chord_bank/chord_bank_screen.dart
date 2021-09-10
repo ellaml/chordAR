@@ -4,6 +4,7 @@ import 'chord_search.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 
 class ChordBankScreen extends StatelessWidget {
+  static const routeName = '/chord-bank';
   @override
   Widget build(BuildContext context) {
     ScreenData screenData = ScreenData(context);

@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import '../app_colors.dart' as appColors;
 
 class MenuButton extends StatelessWidget {
   final String buttonLabel;
   final String imgSrc;
-  final Widget route;
+  final String routeName;
+  // final Widget route;
   final double height, width;
 
-  void changeScreen(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) {
-        return this.route;
-      },
-    ));
+  void changeScreen(BuildContext context, int colorCode) {
+    Navigator.of(context).pushNamed(
+      this.routeName, arguments: colorCode);
+    // Navigator.push(context, MaterialPageRoute(
+    //   builder: (context) {
+    //     return this.route;
+    //   },
+    // ));
   }
 
   MenuButton(
-      this.route, this.imgSrc, this.buttonLabel, this.height, this.width);
+      this.routeName, this.imgSrc, this.buttonLabel, this.height, this.width);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,11 @@ class MenuButton extends StatelessWidget {
                       style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(10))),
             ),
-            onPressed: () => changeScreen(context),
+            onPressed: () async {
+              UserPreferences prefs = UserPreferences();
+              int colorCode = await prefs.getColorCode();
+              changeScreen(context, colorCode);
+              },
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
