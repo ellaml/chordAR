@@ -1,0 +1,2 @@
+class NotEnoughStringsDetected(Exception):
+    pass

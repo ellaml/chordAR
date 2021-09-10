@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
+import 'package:flutter_complete_guide/live_mode/scrollable_list.dart';
 import 'package:flutter_complete_guide/settings/chords_voice_recognition.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -23,9 +24,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   CameraDescription _selectedCamera;
   CameraType _cameraType;
   double screenWidth, screenHeight;
+  bool displayList = false;
   final _stackKey = GlobalKey();
 
-  Timer _timer;
+  Timer _timerFrames, _timerProgression;
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
@@ -64,7 +66,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     var i = 0;
     if (globals.progressionMode) {
-      _timer = Timer.periodic(Duration(seconds: globals.currentProg.interval),
+      _timerProgression = Timer.periodic(Duration(seconds: globals.currentProg.interval),
           (Timer t) {
         if (i < globals.currentProg.chords.length) {
           globals.chord = globals.currentProg.chords[i].name;
@@ -77,7 +79,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         }
       });
     } // has to be 1 if we want to match every interval
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    _timerFrames = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
@@ -100,6 +102,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    globals.chord = "";
     //Fix for length and not mirroring in tablet
     if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
@@ -113,8 +116,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
     Wakelock.disable(); // turn on auto-sleep again
     WidgetsBinding.instance.addObserver(this);
-    _timer.cancel();
-    _timer = null;
+    _timerProgression.cancel();
+    _timerProgression = null;
+    _timerFrames.cancel();
+    _timerFrames = null;
     _controller?.dispose();
     super.dispose();
   }
@@ -130,6 +135,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       setupCamera();
     }
+  }
+
+  void _toggleList() {
+    setState(() {
+      this.displayList = !this.displayList;
+    });
   }
 
   @override
@@ -154,9 +165,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           automaticallyImplyLeading: true,
           elevation: 0,
         ),
+
         floatingActionButtonLocation: globals.progressionMode
             ? null
-            : FloatingActionButtonLocation.endFloat,
+            : FloatingActionButtonLocation.centerFloat,
         floatingActionButton: globals.progressionMode
             ? Container(
                 width: 0,
@@ -166,15 +178,63 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
-                child: Stack(
-                  key: this._stackKey,
-                  children: [
-                    CameraPreview(_controller),
-                    //Image.asset('assets/images/01.jpg'), //Testing static image
-                    ...listOfChordPointsWidgets,
-                    ChordTitle(globals.chord)
-                  ],
-                ),
+                child: Stack(key: this._stackKey, children: [
+                  Center(child: CameraPreview(_controller)),
+                  //Image.asset('assets/images/01.jpg'), //Testing static image
+                  ...listOfChordPointsWidgets,
+                  ChordTitle(globals.chord),
+                  globals.progressionMode ? Container(width:0, height:0) : Positioned(
+                    top: 30,
+                    right: 100,
+                    child:Container(
+                     // margin: EdgeInsets.fromLTRB(0, 30, 100, 30),
+                      //alignment: Alignment.topRight,
+                      child: this.displayList
+                          ? Column(children: [
+                              ScrollableList(
+                                  ((chordName) => globals.chord = chordName),
+                                  _toggleList),
+                            ])
+                          : GestureDetector(
+                              onTap: () => _toggleList(),
+                              child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color: appColors.notesWidgetGlow,
+                                            spreadRadius: 5,
+                                            blurRadius: 7,
+                                            offset: Offset(2, 2))
+                                      ],
+                                      color: appColors.backgroundColor,
+                                      border: Border.all(
+                                          color: appColors.notesWidgetColor),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  width: 120,
+                                  child: Container(
+                                      height: 80,
+                                      child: Column(
+                                        children: [
+                                          Text("Chords",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      "BankGothicMedium",
+                                                  color: Colors.white,
+                                                  fontSize: 20)),
+                                          RotationTransition(
+                                              turns: new AlwaysStoppedAnimation(
+                                                  270 / 360),
+                                              child: Container(
+                                                  height: 25,
+                                                  width: 25,
+                                                  margin: EdgeInsets.all(10),
+                                                  child: Image.asset(
+                                                      'assets/icons/back-white64.png')))
+                                        ],
+                                      ))))),
+                )]),
               ));
   }
 

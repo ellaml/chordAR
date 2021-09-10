@@ -45,6 +45,7 @@ dependencies:
   avatar_glow: ^1.2.0
   screen: ^0.0.5
   wakelock: ^0.5.3+3
+  flutter_isolate: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,7 @@ flutter:
      - assets/logo/logo-title.png
      - assets/logo/cut-logo.png
      - assets/logo/logo-outline-title.png
+     - assets/icons/back-white64.png
      - assets/icons/open-book64.png
      - assets/icons/open-book128.png
      - assets/icons/process64.png
