@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/providers/user_preferences.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'main_menu/main_menu.dart';
 import 'settings/settings_screen.dart';
@@ -43,10 +45,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-void openSettings(BuildContext context) {
+void openSettings(BuildContext context, int interval, int color) {
   Navigator.push(context, MaterialPageRoute(
     builder: (_) {
-      return SettingsScreen();
+      return SettingsScreen(color, interval);
     },
   ));
 }
@@ -62,7 +64,12 @@ class HomePage extends StatelessWidget {
         Flexible(
             flex: 1,
             child: GestureDetector(
-                onTap: () => openSettings(context),
+                onTap: () async {
+                  UserPreferences prefs = UserPreferences();
+                  int interval = await prefs.getDefaultInterval();
+                  int color = await prefs.getColorCode();
+                  openSettings(context, interval, color);
+                  },
                 child: Container(
                   color: appColors.backgroundColor,
                   width: double.infinity,

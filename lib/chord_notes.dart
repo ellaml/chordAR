@@ -4,16 +4,17 @@ import 'dart:io';
 import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/globals.dart';
 import 'package:flutter_complete_guide/models/chord.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 import 'package:flutter_complete_guide/globals.dart' as globals;
 
-Widget createNoteWidget(
-    Point point, double topAdd, double leftAdd, double width, double height) {
+Widget createNoteWidget(Point point, double topAdd, double leftAdd,
+    double width, double height, int colorCode) {
+  print(colorCode);
   return Positioned(
     left: point.x.toDouble() * width, //new_left,
     top: point.y.toDouble() *
@@ -24,7 +25,7 @@ Widget createNoteWidget(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.white, width: 1.5),
           shape: NOTE_SHAPE,
-          color: COLOR_NOTE,
+          color: Color(colorCode),
           boxShadow: [
             BoxShadow(
               color: appColors.notesWidgetLight,
@@ -50,7 +51,11 @@ List<Point> createPointsListFromJson(
         convertDynamicToDouble(point[X_JSON_KEY]).toStringAsFixed(2));
     final double y = double.parse(
         convertDynamicToDouble(point[Y_JSON_KEY]).toStringAsFixed(2));
-    print("\n createPointsListFromJson    x: " + x.toString() + " y: " + y.toString() + "\n");
+    print("\n createPointsListFromJson    x: " +
+        x.toString() +
+        " y: " +
+        y.toString() +
+        "\n");
     listOfChordNotesCoordinates.add(Point(x, y));
   }
 
@@ -62,7 +67,8 @@ double convertDynamicToDouble(dynamic jsonVal) {
 }
 
 List<Point> convJsonToListOfNotesCoordinates(dynamic listOfNotesInfoJson) {
-  final dynamic listOfNotesCoordinatesJson = listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
+  final dynamic listOfNotesCoordinatesJson =
+      listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
   final double numOfNotes =
       convertDynamicToDouble(listOfNotesInfoJson[NUM_NOTES_JSON_KEY]);
   return createPointsListFromJson(listOfNotesCoordinatesJson, numOfNotes);
@@ -117,10 +123,11 @@ Future<String> fetchNotesInfoByPathOfFrame(
 }
 
 List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates,
-    double top, double left, double width, double height) {
+    double top, double left, double width, double height, int colorCode) {
   final List<Widget> listOfWidgets = [];
   for (final Point point in listOfNotesCoordinates) {
-    listOfWidgets.add(createNoteWidget(point, top, left, width, height));
+    listOfWidgets
+        .add(createNoteWidget(point, top, left, width, height, colorCode));
   }
   return listOfWidgets;
 }
@@ -152,8 +159,6 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     double height) async {
   String listOfNotesInfoStr =
       await fetchNotesInfoByPathOfFrame(framePath, chordName);
-  print("\n ================================= FLUTTER =================================\n");
-  print(listOfNotesInfoStr);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   List<Widget> listOfWidgets = [];
   if (listOfNotesInfoStr
@@ -164,16 +169,15 @@ Future<List<Widget>> createNoteWidgetsByFrame(
   {
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
-    print("\n listOfNotes: " + listOfNotesInfoStr + "\n");
     Map<String, dynamic> listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
     final String chordName = listOfNotesInfoJson[CHORD_NAME_JSON_KEY];
     globals.chordTitle = chordName;
-    print("################ chordName: " + chordName + "###############");
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
-    listOfWidgets = createNoteWidgetsByListOfPoints(
-        listOfNotesCoordinates, top, left, width, height);
-  print("\n ================================= END =================================\n");
+    UserPreferences prefs = UserPreferences();
+    int colorCodeForNotesWidgets = 0xFF80ffd4;//await prefs.getColorCode();
+    listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates, top,
+        left, width, height, colorCodeForNotesWidgets);
 
     //await ImageGallerySaver.saveFile(framePath);
     // print("Gallery: " + fileName.toString());

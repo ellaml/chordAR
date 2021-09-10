@@ -50,14 +50,6 @@ class _ChordTitle extends State<ChordTitle> {
                 ],
               ),
               child: Text(widget.title, style: colorizeTextStyle),
-              //  AnimatedTextKit(
-              //     repeatForever: true,
-              //     //onFinished: () => updateTitle,
-              //     //totalRepeatCount: 1,
-              //     animatedTexts:  [
-              //             FlickerAnimatedText(widget.title),
-              //           ]
-              //     )
             ),
           )));
     }
@@ -79,7 +71,7 @@ class _ChordTitle extends State<ChordTitle> {
 
   static const colorizeTextStyle = TextStyle(
       fontSize: 50.0,
-      fontFamily: 'BankGothicMedium', //BankGothicLight
+      fontFamily: 'BankGothicMedium', 
       shadows: [
         Shadow(
           blurRadius: 7.0,
