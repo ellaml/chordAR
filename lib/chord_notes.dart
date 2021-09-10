@@ -126,10 +126,22 @@ Future<String> fetchNotesInfoByPathOfFrame(
 List<Widget> createNoteWidgetsByListOfPoints(String chordName, List<Point> listOfNotesCoordinates,
     double top, double left, double width, double height, int colorCode) {
   final List<Widget> listOfWidgets = [];
+  List<int> bar = Chord.getChordBar(chordName);
+  int i = 0;
   for (final Point point in listOfNotesCoordinates) {
-    List<int> bar = getChordBar(chordName);
-    listOfWidgets
-        .add(createNoteWidget(point, top, left, width, height, colorCode));
+    if (!bar.isEmpty && (bar[0] == i || bar[1] == i))
+    {
+        Point<num> pt1 = listOfNotesCoordinates[bar[0]];
+        Point<num> pt2 = listOfNotesCoordinates[bar[1]];
+        Offset o_pt1 = Offset(pt1.x, pt1.y);
+        Offset o_pt2 = Offset(pt2.x, pt2.y);
+        CustomPaint(painter: LinePainter(o_pt1, o_pt2));
+    }
+    else 
+    {
+       listOfWidgets.add(createNoteWidget(point, top, left, width, height, colorCode));
+    }
+    i++;
   }
   return listOfWidgets;
 }
@@ -168,7 +180,8 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     print("failed");
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.red, 1));
   } else // TODO: Need to add after the image processing is ready
-  {
+  {   
+    print("test");
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     Map<String, dynamic> listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
@@ -198,3 +211,19 @@ Future<List<Widget>> createNoteWidgetsByFrame(
   return <Widget>[createNoteWidget(Point(1,2)), createNoteWidget((Point(50,40)))];
 }*/
 
+class LinePainter extends CustomPainter {
+
+  Offset p1, p2;
+  LinePainter(this.p1, this.p2);
+  @override
+  void paint(Canvas canvas, Size size) {
+  final paint = Paint()
+    ..color = Colors.black
+    ..strokeWidth = 4;
+  canvas.drawLine(this.p1, this.p2, paint);  }
+
+    @override
+  bool shouldRepaint(CustomPainter old) {
+    return false;
+  }
+}
