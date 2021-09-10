@@ -98,6 +98,7 @@ Future<void> saveChordPositionInFile(String chordName) async {
   newPath += "position.txt";
   print("newPath:" + newPath);
   final file = File('$newPath');
+  // file.writeAsString(chordName + ',');
   file.writeAsString(Chord.getChordPosition(chordName));
   //var syncPath = await newPath;
   //var exists =  await File(syncPath).exists();
@@ -171,7 +172,7 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     // print("Gallery: " + fileName.toString());
     // print("frame Path: " + framePath);
   }
-  await ImageGallerySaver.saveFile(framePath);
+  //await ImageGallerySaver.saveFile(framePath);
   //String pathToSaveFrame = await getPathToSaveFrame();
   //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 
