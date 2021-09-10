@@ -7,6 +7,7 @@ const String FETCH_CHORD_NOTES_BY_FRAME_URL = 'http://18.189.175.253:82/fetch_ch
 const String HELLO_WORLD_URL = 'http://18.189.175.253:82/test';
 
 const String NUM_NOTES_JSON_KEY = 'numOfNotes';
+const String CHORD_NAME_JSON_KEY = 'chordName';
 const String X_JSON_KEY = 'x';
 const String Y_JSON_KEY = 'y';
 const String NOTES_COORDINAES_JSON_KEY = 'notes_coordinates';

@@ -27,7 +27,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   bool displayList = false;
   final _stackKey = GlobalKey();
 
-  Timer _timer;
+  Timer _timerFrames, _timerProgression;
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
@@ -39,14 +39,15 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     final topAddition = 80.0; //app bar
     final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
-    if (globals.isMicTurnedOn) {
+    if (globals.progressionMode || globals.isMicTurnedOn) {
       if (globals.chord != null && globals.chord != "") {
         print("The chord is: " + globals.chord);
         listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord,
             xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+      } else {
+        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
+            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
       }
-      listOfChordPointsWidgets = await createNoteWidgetsByFrame("A", xfile.path,
-          topAddition, leftAddition, cameraWidth, cameraHeight);
     }
     await removeFile(xfile.path);
   }
@@ -63,11 +64,27 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     setupCamera();
     Wakelock.enable(); // turn off auto-sleep
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 2), (Timer t) {
+    var i = 0;
+    if (globals.progressionMode) {
+      _timerProgression = Timer.periodic(Duration(seconds: globals.currentProg.interval),
+          (Timer t) {
+        if (i < globals.currentProg.chords.length) {
+          globals.chord = globals.currentProg.chords[i].name;
+          i++;
+          setState(() {
+            _updateListOfChordPointWidgets();
+          });
+        } else {
+          i = 0;
+        }
+      });
+    } // has to be 1 if we want to match every interval
+    _timerFrames = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         _updateListOfChordPointWidgets();
       });
     });
+
     //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
     //  _saveImgToGallery();
     //});
@@ -85,6 +102,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    globals.chord = "";
+    globals.chordTitle = "";
     //Fix for length and not mirroring in tablet
     if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
@@ -98,8 +117,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
     Wakelock.disable(); // turn on auto-sleep again
     WidgetsBinding.instance.addObserver(this);
-    _timer.cancel();
-    _timer = null;
+    _timerProgression.cancel();
+    _timerProgression = null;
+    _timerFrames.cancel();
+    _timerFrames = null;
     _controller?.dispose();
     super.dispose();
   }
@@ -134,7 +155,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         appBar: AppBar(
           backgroundColor: Theme.of(context).backgroundColor,
           centerTitle: true,
-          title: Text("Live Mode",
+          title: Text(globals.progressionMode ? "Progression" : "Live Mode",
               style: TextStyle(
                   fontSize: screenData.isBigDevice ? 32 : 24,
                   color: Colors.white)),
@@ -145,8 +166,16 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           automaticallyImplyLeading: true,
           elevation: 0,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: SpeechScreen(),
+
+        floatingActionButtonLocation: globals.progressionMode
+            ? null
+            : FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: globals.progressionMode
+            ? Container(
+                width: 0,
+                height: 0,
+              )
+            : SpeechScreen(),
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
@@ -154,8 +183,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                   Center(child: CameraPreview(_controller)),
                   //Image.asset('assets/images/01.jpg'), //Testing static image
                   ...listOfChordPointsWidgets,
-                  ChordTitle(globals.chord),
-                  Positioned(
+                  ChordTitle(globals.chordTitle),
+                  globals.progressionMode ? Container(width:0, height:0) : Positioned(
                     top: 30,
                     right: 100,
                     child:Container(
@@ -164,7 +193,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                       child: this.displayList
                           ? Column(children: [
                               ScrollableList(
-                                  ((chordName) => globals.chord = chordName),
+                                  ((chordName) {
+                                    globals.chord = chordName;
+                                    globals.chordTitle = chordName;
+                                  }),
                                   _toggleList),
                             ])
                           : GestureDetector(
