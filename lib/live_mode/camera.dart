@@ -6,9 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/live_mode/scrollable_list.dart';
 import 'package:flutter_complete_guide/settings/chords_voice_recognition.dart';
+import 'package:flutter_complete_guide/settings/chords_voice_recognition_without_class.dart';
+
 import 'package:flutter_complete_guide/utils.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_complete_guide/globals.dart' as globals;
+import 'package:porcupine/porcupine.dart';
+import 'package:porcupine/porcupine_error.dart';
+import 'package:porcupine/porcupine_manager.dart';
 import 'package:wakelock/wakelock.dart';
 import '../app_colors.dart' as appColors;
 import 'chord_title.dart';
@@ -26,12 +31,13 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   double screenWidth, screenHeight;
   bool displayList = false;
   final _stackKey = GlobalKey();
+  PorcupineManager _porcupineManager;
 
   Timer _timerFrames, _timerProgression;
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
-    final RenderBox renderBox =
+    /*final RenderBox renderBox =
         this._stackKey.currentContext.findRenderObject();
     final cameraHeight = renderBox.size.height;
     final cameraWidth = renderBox.size.width;
@@ -49,7 +55,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
       }
     }
-    await removeFile(xfile.path);
+    await removeFile(xfile.path);*/
+    print("Hi");
   }
 
   void _saveImgToGallery() async {
@@ -96,6 +103,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         DeviceOrientation.portraitDown,
       ]);
     }
+
+
 
     //End of Fix for length and not mirroring in tablet
   }
@@ -166,7 +175,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
           elevation: 0,
         ),
 
-        floatingActionButtonLocation: globals.progressionMode
+        /*floatingActionButtonLocation: globals.progressionMode
             ? null
             : FloatingActionButtonLocation.centerFloat,
         floatingActionButton: globals.progressionMode
@@ -174,7 +183,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                 width: 0,
                 height: 0,
               )
-            : SpeechScreen(),
+            : SpeechScreen(),*/
         body: _controller == null
             ? Container(color: Colors.black)
             : Center(
@@ -239,6 +248,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   }
 
   void setupCamera() {
+    initialize_procupaine();
+
     availableCameras().then((data) {
       setState(() {
         if (data.length >= 2) {
@@ -269,6 +280,44 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     final file = io.File(filePath);
     if (file.existsSync()) {
       await file.delete();
+    }
+  }
+
+  void initialize_procupaine() async
+  {
+    print("***********");
+    await createPorcupineManager();
+    listenForWakeWord();
+  }
+
+  /// Begin listening for a wake word
+  void listenForWakeWord() async{
+    try{
+      print("In listenForWaktWord function");
+      await _porcupineManager.start();
+    } on PvAudioException catch (ex) {
+      // deal with either audio exception
+      print('PvAudioException: '+ ex.message);
+    }
+  }
+
+  /// The function that's triggered when the Porcupine instance recognizes a wake word
+  /// Input is the index of the wake word in the list of those being used
+  void wakeWordCallback(int word){
+    listenNew1();
+    print('Wake word index: '+ word.toString());
+  }
+
+  /// Create an instance of your porcupineManager which will listen for the given wake words
+  /// Must call start on the manager to actually start listening
+  Future<void> createPorcupineManager() async {
+    try {
+      print("In create Procupine Manager, the build in key words are:");
+      print(Porcupine.BUILT_IN_KEYWORDS);
+      _porcupineManager = await PorcupineManager.fromKeywords(Porcupine.BUILT_IN_KEYWORDS, wakeWordCallback);
+    } on PvError catch (err) {
+      // handle porcupine init error
+      print('Porcupine error: ' + err.message);
     }
   }
 }

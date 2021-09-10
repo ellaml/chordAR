@@ -5,7 +5,9 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/globals.dart' as globals;
-
+import 'package:porcupine/porcupine.dart';
+import 'package:porcupine/porcupine_error.dart';
+import 'package:porcupine/porcupine_manager.dart';
 import '../chord_names.dart';
 
 class SpeechScreen extends StatefulWidget {
@@ -19,6 +21,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
   bool _isListening = false;
   String _text = '';
   double _confidence = 1.0;
+
 
   @override
   void initState() {
@@ -103,4 +106,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
       _speech.stop();
     }
   }
+
+
+
 }

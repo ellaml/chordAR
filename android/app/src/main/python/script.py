@@ -15,8 +15,12 @@ def mainTextCode(code):
     chord_position_file = os.path.join(a, "position.txt")
 
     try:
-        file = open(chord_position_file)
-        chord_position = file.read().replace("\n"," ")
+        file1 = open(chord_position_file, 'r')
+        lines = file1.readlines()
+        chord_name = lines[0]
+        chord_position = lines[1]
+        #file = open(chord_position_file)
+        #chord_position = file.read().replace("\n"," ")
         print("Chord position:")
         print(chord_position)
         guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
@@ -25,12 +29,12 @@ def mainTextCode(code):
         print("Coordinates before adjusting to screen:")
         print(coordinates)
         coordinates = guitar.get_chord_coordinates_relative(coordinates)
-        print(buildJson(coordinates))
+        print(buildJson(coordinates), chord_name)
     except Exception as e:
         print("failed")
         print(e)
 
-def buildJson(coordinates):
+def buildJson(coordinates, chord_name):
     json_details="{'notes_coordinates': ["
     i=1
     for coordinate in coordinates:
@@ -38,7 +42,7 @@ def buildJson(coordinates):
         if(i != len(coordinates)):
             json_details+=","
         i+=1
-    json_details +=  "], 'numOfNotes': " + "'" + str(len(coordinates)) + "'" + "}"
+    json_details +=  "], 'numOfNotes': " + "'" + str(len(coordinates)) + "'" + ", chord_name:" + chord_name + "}"
     return json_details.replace("'","\"")
 
 '''   json_details = { "notes_coordinates": [ {"x": getRandNum(), "y": getRandNum()}, {"x": getRandNum(), "y": getRandNum()},
