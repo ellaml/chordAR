@@ -28,13 +28,15 @@ class SingleProgression extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
-              onTap: () {
+              onTap: () async {
                 globals.progressionMode = true;
                 globals.currentProg =
                     Provider.of<Progressions>(context, listen: false)
                         .findById(id);
+                UserPreferences prefs = UserPreferences();
+                int colorCode = await prefs.getColorCode();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return Camera();
+                  return Camera(colorCode);
                 }));
               },
               child: Container(

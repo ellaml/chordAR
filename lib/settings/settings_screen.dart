@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'user_preferences_shared.dart';
 
 class SettingsScreen extends StatefulWidget {
-  static const routeName = '/single-progression';
 
   int color;
   int interval;
