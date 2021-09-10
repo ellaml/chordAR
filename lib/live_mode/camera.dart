@@ -16,7 +16,10 @@ import 'chord_title.dart';
 enum CameraType { ONE, TWO }
 
 class Camera extends StatefulWidget {
+  int colorCode;
   _CameraState createState() => _CameraState();
+
+  Camera(this.colorCode);
 }
 
 class _CameraState extends State<Camera> with WidgetsBindingObserver {
@@ -41,13 +44,14 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     XFile xfile = await _controller?.takePicture();
     if (globals.progressionMode || globals.isMicTurnedOn) {
       if (globals.chord != null && globals.chord != "") {
-        print("The chord is: " + globals.chord);
+        //print("The chord is: " + globals.chord);
         listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord,
-            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-      } else {
-        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
-            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight, this.widget.colorCode);
       }
+      // } else {
+      //   listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
+      //       xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+      // }
     }
     await removeFile(xfile.path);
   }
@@ -84,7 +88,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         _updateListOfChordPointWidgets();
       });
     });
-
+    print("COLORRRRRRRRRRRR: " + this.widget.colorCode.toString());
     //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
     //  _saveImgToGallery();
     //});

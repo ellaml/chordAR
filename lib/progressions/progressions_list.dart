@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/progressions/edit_progression_screen.dart';
 import 'package:flutter_complete_guide/progressions/single_progression.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:provider/provider.dart';
 import '../providers/progressions.dart';
 import '../utils.dart';
@@ -24,8 +25,10 @@ class _ProgressionsListState extends State<ProgressionsList> {
         margin: EdgeInsets.all(20),
         alignment: Alignment.center,
         child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(EditProgressionScreen.routeName);
+            onTap: () async {
+              UserPreferences prefs = UserPreferences();
+              int interval = await prefs.getDefaultInterval();
+              Navigator.of(context).pushNamed(EditProgressionScreen.routeName, arguments: [null, interval]);
             },
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Container(child: Image.asset('assets/icons/plus64.png')),

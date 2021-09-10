@@ -4,6 +4,7 @@ import '../utils.dart';
 import 'progressions_list.dart';
 
 class ProgressionsScreen extends StatelessWidget {
+  static const routeName = '/progressions';
   @override
   Widget build(BuildContext context) {
     ScreenData screenData = ScreenData(context);

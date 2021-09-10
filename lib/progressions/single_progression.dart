@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:flutter_complete_guide/live_mode/camera.dart';
 import 'package:flutter_complete_guide/live_mode/live_mode_screen.dart';
 import '../progressions/edit_progression_screen.dart';
@@ -27,13 +28,15 @@ class SingleProgression extends StatelessWidget {
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
-              onTap: () {
+              onTap: () async {
                 globals.progressionMode = true;
                 globals.currentProg =
                     Provider.of<Progressions>(context, listen: false)
                         .findById(id);
+                UserPreferences prefs = UserPreferences();
+                int colorCode = await prefs.getColorCode();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return Camera();
+                  return Camera(colorCode);
                 }));
               },
               child: Container(
@@ -49,10 +52,12 @@ class SingleProgression extends StatelessWidget {
             children: [
               IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () {
+                  onPressed: () async {
+                    UserPreferences prefs = UserPreferences();
+                    int interval = await prefs.getDefaultInterval();
                     Navigator.of(context).pushNamed(
                         EditProgressionScreen.routeName,
-                        arguments: id);
+                        arguments:[id, null]);
                   }),
               IconButton(
                   icon: Icon(Icons.delete),
