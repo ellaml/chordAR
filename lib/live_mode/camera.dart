@@ -103,6 +103,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   @override
   void dispose() {
     globals.chord = "";
+    globals.chordTitle = "";
     //Fix for length and not mirroring in tablet
     if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
@@ -182,7 +183,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                   Center(child: CameraPreview(_controller)),
                   //Image.asset('assets/images/01.jpg'), //Testing static image
                   ...listOfChordPointsWidgets,
-                  ChordTitle(globals.chord),
+                  ChordTitle(globals.chordTitle),
                   globals.progressionMode ? Container(width:0, height:0) : Positioned(
                     top: 30,
                     right: 100,
@@ -192,7 +193,10 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
                       child: this.displayList
                           ? Column(children: [
                               ScrollableList(
-                                  ((chordName) => globals.chord = chordName),
+                                  ((chordName) {
+                                    globals.chord = chordName;
+                                    globals.chordTitle = chordName;
+                                  }),
                                   _toggleList),
                             ])
                           : GestureDetector(

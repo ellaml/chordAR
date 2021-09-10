@@ -10,6 +10,7 @@ import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
+import 'package:flutter_complete_guide/globals.dart' as globals;
 
 Widget createNoteWidget(
     Point point, double topAdd, double leftAdd, double width, double height) {
@@ -166,6 +167,7 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     print("\n listOfNotes: " + listOfNotesInfoStr + "\n");
     Map<String, dynamic> listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
     final String chordName = listOfNotesInfoJson[CHORD_NAME_JSON_KEY];
+    globals.chordTitle = chordName;
     print("################ chordName: " + chordName + "###############");
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
