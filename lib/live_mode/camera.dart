@@ -41,13 +41,14 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     XFile xfile = await _controller?.takePicture();
     if (globals.progressionMode || globals.isMicTurnedOn) {
       if (globals.chord != null && globals.chord != "") {
-        print("The chord is: " + globals.chord);
+        //print("The chord is: " + globals.chord);
         listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord,
             xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-      } else {
-        listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
-            xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
       }
+      // } else {
+      //   listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
+      //       xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+      // }
     }
     await removeFile(xfile.path);
   }
