@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 import 'package:flutter_complete_guide/globals.dart' as globals;
+import '/models/chord.dart' as chord;
 
 Widget createNoteWidget(Point point, double topAdd, double leftAdd,
     double width, double height, int colorCode) {
@@ -122,10 +123,11 @@ Future<String> fetchNotesInfoByPathOfFrame(
   return outputMap['textOutputOrError'].toString();
 }
 
-List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates,
+List<Widget> createNoteWidgetsByListOfPoints(String chordName, List<Point> listOfNotesCoordinates,
     double top, double left, double width, double height, int colorCode) {
   final List<Widget> listOfWidgets = [];
   for (final Point point in listOfNotesCoordinates) {
+    List<int> bar = getChordBar(chordName);
     listOfWidgets
         .add(createNoteWidget(point, top, left, width, height, colorCode));
   }
@@ -176,7 +178,7 @@ Future<List<Widget>> createNoteWidgetsByFrame(
         convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
     UserPreferences prefs = UserPreferences();
     int colorCodeForNotesWidgets = 0xFF80ffd4;//await prefs.getColorCode();
-    listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates, top,
+    listOfWidgets = createNoteWidgetsByListOfPoints(chordName, listOfNotesCoordinates, top,
         left, width, height, colorCodeForNotesWidgets);
 
     //await ImageGallerySaver.saveFile(framePath);
