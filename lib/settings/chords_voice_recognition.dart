@@ -85,10 +85,12 @@ class _SpeechScreenState extends State<SpeechScreen> {
               globals.chordIsValid=true;
               globals.chord=_text;
               print("chord " + _text + " exists");
+              globals.voiceError = "";
             }
             else {
               globals.chordIsValid=false;
               print(_text + " isn't a valid chord");
+              globals.voiceError = _text + " isn't a valid chord"; 
             }
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/live_mode/camera.dart';
+import 'package:flutter_complete_guide/live_mode/live_mode_screen.dart';
 import '../progressions/edit_progression_screen.dart';
 import '../providers/progressions.dart';
 import 'package:provider/provider.dart';
 import '../app_colors.dart' as appColors;
+import '../globals.dart' as globals;
 
 class SingleProgression extends StatelessWidget {
   final String buttonLabel;
@@ -25,8 +28,13 @@ class SingleProgression extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(EditProgressionScreen.routeName,
-                    arguments: this.id);
+                globals.progressionMode = true;
+                globals.currentProg =
+                    Provider.of<Progressions>(context, listen: false)
+                        .findById(id);
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return Camera();
+                }));
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
