@@ -17,13 +17,11 @@ def mainTextCode(code):
     try:
         file = open(chord_position_file)
         chord_position = file.read().replace("\n"," ")
-        print("Chord position:")
-        print(chord_position)
+        print(f"Chord position: {chord_position}")
         guitar = GuitarImage(img_path=Path(rf"{filename}"))  # , file_name=r"1_.jpg")
         file.close()
         coordinates = guitar.get_chord_coordinates(chord_position)
-        print("Coordinates before adjusting to screen:")
-        print(coordinates)
+        print(f"Coordinates before adjusting to screen: {coordinates}")
         coordinates = guitar.get_chord_coordinates_relative(coordinates)
         print(buildJson(coordinates))
     except Exception as e:
@@ -34,16 +32,17 @@ def buildJson(coordinates):
     json_details="{'notes_coordinates': ["
     i=1
     for coordinate in coordinates:
-        json_details +=  "{'x': " + str(coordinate.x) + ", 'y': " + str(coordinate.y) + "}"
+        json_details +=  f"{{'x': {str(coordinate.x)}, 'y': {str(coordinate.y)}}}"
         if(i != len(coordinates)):
             json_details+=","
         i+=1
-    json_details +=  "], 'numOfNotes': " + "'" + str(len(coordinates)) + "'" + "}"
+    json_details +=  f"], 'numOfNotes': '{str(len(coordinates))}'}}"
     return json_details.replace("'","\"")
 
-'''   json_details = { "notes_coordinates": [ {"x": getRandNum(), "y": getRandNum()}, {"x": getRandNum(), "y": getRandNum()},
-            {"x": getRandNum(), "y": getRandNum()},
-        ],
-        "numOfNotes": "3"}
-        
+'''   json_details = {
+            "notes_coordinates": 
+                [{"x": getRandNum(), "y": getRandNum()},
+                {"x": getRandNum(), "y": getRandNum()},
+                {"x": getRandNum(), "y": getRandNum()},],
+            "numOfNotes": "3"}
 '''
