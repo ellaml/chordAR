@@ -1,41 +1,47 @@
-import 'package:flutter/material.dart';
-import '../helpers/db_helper.dart';
+// import 'package:flutter/material.dart';
+// import '../helpers/db_helper.dart';
+// import 'preference.dart';
 
-class UserPreferences with ChangeNotifier {
-  String _colorCode;
-  int _interval;
+// class UserPreferences with ChangeNotifier {
+//   Preference prefs;
 
-  String get colorCode {
-    return _colorCode;
-  }
+//   Preference get items {
+//     return prefs;
+//   }
+//   String _colorCode;
+//   int _interval;
 
-  int get interval {
-    return _interval;
-  }
+//   String get colorCode {
+//     return _colorCode;
+//   }
 
-  void updateColor(String newColor) {
-    _colorCode = newColor;
-    notifyListeners();
-    DBHelper.insert('user_preferences', {
-      'id': 0,
-      'color': _colorCode,
-    });
-  }
+//   int get interval {
+//     return _interval;
+//   }
 
-    void updateInterval(int newInterval) {
-    _interval = newInterval;
-    notifyListeners();
-    DBHelper.insert('user_preferences', {
-      'id': 0,
-      'interval': _interval,
-    });
-  }
+//   void updateColor(String newColor) {
+//     _colorCode = newColor;
+//     notifyListeners();
+//     DBHelper.insert('user_preferences', {
+//       'id': 0,
+//       'color': _colorCode,
+//     });
+//   }
 
-  Future<void> fetchPreferences() async {
-    final dataList = await DBHelper.getData('user_preferences');
-    _colorCode = dataList[0]['color'];
-    _interval = dataList[0]['interval'];
-    notifyListeners();
-  }
+//     void updateInterval(int newInterval) {
+//     _interval = newInterval;
+//     notifyListeners();
+//     DBHelper.insert('user_preferences', {
+//       'id': 0,
+//       'interval': _interval,
+//     });
+//   }
 
-}
+//   Future<void> fetchPreferences() async {
+//     final dataList = await DBHelper.getData('user_preferences');
+//     _colorCode = dataList[0]['color'];
+//     _interval = dataList[0]['interval'];
+//     notifyListeners();
+//   }
+
+// }

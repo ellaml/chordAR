@@ -45,7 +45,10 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final progressionId = ModalRoute.of(context).settings.arguments as String;
+      final args = ModalRoute.of(context).settings.arguments as List;
+      final progressionId = args[0];
+      final interval = args[1];
+
       if (progressionId != null) {
         Progression existing = Provider.of<Progressions>(context, listen: false)
             .findById(progressionId);
@@ -56,6 +59,11 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
         _initValues = {
           'name': _editedProgression.name,
           'interval': _editedProgression.interval.toString(),
+        };
+      }
+      else{
+        _initValues = {
+          'interval': interval.toString(),
         };
       }
       _isInit = false;

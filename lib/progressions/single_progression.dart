@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import '../progressions/edit_progression_screen.dart';
 import '../providers/progressions.dart';
 import 'package:provider/provider.dart';
@@ -41,10 +42,12 @@ class SingleProgression extends StatelessWidget {
             children: [
               IconButton(
                   icon: Icon(Icons.edit),
-                  onPressed: () {
+                  onPressed: () async {
+                    UserPreferences prefs = UserPreferences();
+                    int interval = await prefs.getDefaultInterval();
                     Navigator.of(context).pushNamed(
                         EditProgressionScreen.routeName,
-                        arguments: id);
+                        arguments:[id, null]);
                   }),
               IconButton(
                   icon: Icon(Icons.delete),

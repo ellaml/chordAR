@@ -4,13 +4,15 @@ import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/chord.dart';
+import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 
 Widget createNoteWidget(
-    Point point, double topAdd, double leftAdd, double width, double height) {
+    Point point, double topAdd, double leftAdd, double width, double height, int colorCode) {
+      print(colorCode);
   return Positioned(
     left: point.x.toDouble() * width, //new_left,
     top: point.y.toDouble() *
@@ -21,7 +23,7 @@ Widget createNoteWidget(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.white, width: 1.5),
           shape: NOTE_SHAPE,
-          color: COLOR_NOTE,
+          color: Color(colorCode),
           boxShadow: [
             BoxShadow(
               color: appColors.notesWidgetLight,
@@ -117,10 +119,10 @@ Future<String> fetchNotesInfoByPathOfFrame(
 }
 
 List<Widget> createNoteWidgetsByListOfPoints(List<Point> listOfNotesCoordinates,
-    double top, double left, double width, double height) {
+    double top, double left, double width, double height, int colorCode) {
   final List<Widget> listOfWidgets = [];
   for (final Point point in listOfNotesCoordinates) {
-    listOfWidgets.add(createNoteWidget(point, top, left, width, height));
+    listOfWidgets.add(createNoteWidget(point, top, left, width, height, colorCode));
   }
   return listOfWidgets;
 }
@@ -165,8 +167,10 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
+        UserPreferences prefs = UserPreferences();
+        int colorCodeForNotesWidgets = await prefs.getColorCode();
     listOfWidgets = createNoteWidgetsByListOfPoints(
-        listOfNotesCoordinates, top, left, width, height);
+        listOfNotesCoordinates, top, left, width, height, colorCodeForNotesWidgets);
 
     //await ImageGallerySaver.saveFile(framePath);
     // print("Gallery: " + fileName.toString());
