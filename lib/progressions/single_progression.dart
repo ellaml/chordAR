@@ -28,10 +28,6 @@ class SingleProgression extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           GestureDetector(
               onTap: () {
-                    //             Navigator.of(context).pushNamed(EditProgressionScreen.routeName,
-                    // arguments: this.id);
-
-                print("JAFJWAOSK");
                 globals.progressionMode = true;
                 globals.currentProg =
                     Provider.of<Progressions>(context, listen: false)
