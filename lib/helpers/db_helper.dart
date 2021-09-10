@@ -16,9 +16,7 @@ class DBHelper {
 
   static _createDb(sql.Database db) {
     db.execute('CREATE TABLE user_progressions(id TEXT PRIMARY KEY, name TEXT, interval INTEGER, chords TEXT)');
-    db.execute('CREATE TABLE user_preferences(id TEXT PRIMARY KEY, color TEXT, interval INTEGER)');
     db.execute('INSERT into user_progressions (id, chords, interval, name) VALUES (1, "Am, F, C, G", 4, "");');
-    db.execute('INSERT into user_preferences (id, color, interval) VALUES (0, "0xFF80ffd4", 5);');
   }
 
   static Future<void> insert(String table, Map<String, Object> data) async {
