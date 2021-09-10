@@ -84,6 +84,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
             {
               globals.chordIsValid=true;
               globals.chord=_text;
+              globals.chordTitle=_text;
               print("chord " + _text + " exists");
               globals.voiceError = "";
             }
