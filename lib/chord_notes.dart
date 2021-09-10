@@ -7,6 +7,8 @@ import './constants.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 
+const chordsFileName = "chords.txt";
+
 Widget createNoteWidget(Point point, double top, double left, double width, double height) {
   return Positioned(
     left: point.x.toDouble() / 100 * width + left,
@@ -93,7 +95,19 @@ String cleanStringForJson(String str) {
       RegExp(r'^.*?{"notes_coordinates"'), '{"notes_coordinates"');
 }
 
-Future<List<Widget>> createNoteWidgetsByFrame(String framePath, String pathToSaveFrame, double top,
+Future<List<Widget>> createNoteWidgetsByChordsNotesJson(double top,
+    double left, double width, double height) async
+{
+  String chordsNotesJson = await _read(chordsFileName);
+  final List<Point> listOfNotesCoordinates =
+  convJsonToListOfNotesCoordinates(chordsNotesJson);
+  List<Widget> listOfWidgets = createNoteWidgetsByListOfPoints(
+      listOfNotesCoordinates, top, left, width, height);
+  return listOfWidgets;
+}
+
+
+void FetchChordsNotesAsJsonToFile(String framePath, String pathToSaveFrame, double top,
     double left, double width, double height) async {
   print("B1");
   print(framePath);
@@ -111,10 +125,11 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, String pathToSav
   {
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
-    final List<Point> listOfNotesCoordinates =
+    _write(listOfNotesInfoStr, chordsFileName);
+    /*final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
     listOfWidgets = createNoteWidgetsByListOfPoints(
-        listOfNotesCoordinates, top, left, width, height);
+        listOfNotesCoordinates, top, left, width, height);*/
 
 
    // print("Gallery: " + fileName.toString());
@@ -125,7 +140,6 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, String pathToSav
   //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
 
   //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.blue, 40));
-  return listOfWidgets;
 }
 
 /*List<Widget> createNoteWidgetsByFrame(String framePath)
@@ -133,3 +147,21 @@ Future<List<Widget>> createNoteWidgetsByFrame(String framePath, String pathToSav
   return <Widget>[createNoteWidget(Point(1,2)), createNoteWidget((Point(50,40)))];
 }*/
 
+_write(String text, String fileName) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  print("Application documents directory: " + directory.path);
+  final File file = File('${directory.path}/${fileName}');
+  await file.writeAsString(text);
+}
+
+Future<String> _read(String fileName) async {
+  String text;
+  try {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/${fileName}');
+    text = await file.readAsString();
+  } catch (e) {
+    print("Couldn't read file");
+  }
+  return text;
+}

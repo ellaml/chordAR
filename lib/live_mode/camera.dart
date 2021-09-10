@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io' as io;
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:camera/camera.dart' as camera;
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/utils.dart';
@@ -13,6 +13,11 @@ import 'package:path_provider/path_provider.dart';
 import 'globals.dart' as globals;
 import 'globals.dart';
 //import 'globals.dart';
+import 'package:chaquopy/chaquopy.dart';
+
+import 'package:flutter_isolate/flutter_isolate.dart';
+const chordsFileName = "chords.txt";
+CameraController controller;
 
 enum CameraType
 {
@@ -20,9 +25,85 @@ enum CameraType
   TWO
 }
 
+selectCamera1(selectedCamera) async {
+  var controller =
+  CameraController(selectedCamera, ResolutionPreset.ultraHigh);
 
+  await controller.initialize();
+  return controller;
+}
+
+void updating(String a) async
+{
+  /*CameraController controller1;
+  CameraDescription selectedCamera;
+  CameraType cameraType;
+
+  camera.availableCameras().then((data) {
+      if (data.length >= 2) {
+        print("two cameras");
+        cameraType = CameraType.TWO;
+        selectedCamera = data[1];
+      }
+      else {
+        print("one camera");
+        cameraType = CameraType.ONE;
+        selectedCamera = data[0];
+      }
+      selectCamera1(selectedCamera).then((data) {
+        controller = data;
+        print("Cameraaa");
+        controller.takePicture();
+      });
+    });
+
+  if(cameraType == CameraType.TWO)
+  {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }*/
+
+  print("A1");
+  var _timer = Timer.periodic(Duration(seconds: 3), (Timer t)
+  {
+    runScript();
+    //controller1.takePicture();
+  });
+}
+
+void runScript() async
+{
+  print("oron!!!!!");
+  var outputMap = await Chaquopy.executeCode("script.py");
+  print(outputMap['textOutputOrError'].toString());
+}
 
 //UpdatingDetails updatingDetails = UpdatingDetails();
+/*
+void updating(UpdatingDetails updatingDetails) async
+{
+  print("A1");
+  final topAddition = updatingDetails.topAddition;
+  print("topAddition!!!!" + topAddition.toString());
+  final leftAddition = updatingDetails.leftAddition;
+  final cameraWidth = updatingDetails.cameraWidth;
+  final cameraHeight = updatingDetails.cameraHeight;
+  final filePath = updatingDetails.filePath;
+  final pathToSaveFrame = updatingDetails.pathToSaveFrame;
+  final controller = updatingDetails.cameraController;
+  XFile xfile = await controller.takePicture();
+  print("A2");//
+  FetchChordsNotesAsJsonToFile(xfile.path, pathToSaveFrame, topAddition, leftAddition, cameraWidth, cameraHeight);
+  //listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
+
+  print("A4");
+  await removeFile(filePath);
+  print("A5");
+
+  //return listOfChordPointsWidgets;
+}*/
 
 class Camera extends StatefulWidget {
   _CameraState createState() => _CameraState();
@@ -34,24 +115,38 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   CameraType _cameraType;
   double screenWidth, screenHeight;
   final _stackKey = GlobalKey();
-
   Timer _timer;
   List<Widget> listOfChordPointsWidgets = [];
 
+  void doSomething() async {
+    final isolate = await FlutterIsolate.spawn(updating, "a");
+  }
   void _updateListOfChordPointWidgets() async {
-    UpdatingDetails updatingDetails;
-    final RenderBox renderBox = this._stackKey.currentContext.findRenderObject();
+    print("in updateListOfChord");
+    //UpdatingDetails updatingDetails;
+    /*final RenderBox renderBox = this._stackKey.currentContext.findRenderObject();
 
     final cameraHeight = renderBox.size.height;
     final cameraWidth = renderBox.size.width;
     String pathToSaveFrame = await getPathToSaveFrame();
     final topAddition = 80.0; //app bar
     final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
-    XFile xfile = await _controller?.takePicture();
-    updatingDetails = UpdatingDetails(screenWidth, cameraHeight, cameraWidth, topAddition, leftAddition, xfile.path, pathToSaveFrame);
-    String jsonUpdatingDetails = jsonEncode(updatingDetails);
-    print("JSON:" + jsonUpdatingDetails);
-    listOfChordPointsWidgets = await compute(updating, jsonUpdatingDetails);
+    updatingDetails = UpdatingDetails(_controller, screenWidth, cameraHeight, cameraWidth, topAddition, leftAddition, pathToSaveFrame, pathToSaveFrame);
+    print("before isolate");
+    //final isolate = await FlutterIsolate.spawn(updating, updatingDetails);
+    final isolate = await FlutterIsolate.spawn(updating, "a");*/
+    //final Directory directory = await getApplicationDocumentsDirectory();
+    //print("Application documents directory: inside function _updateListOfChordPointWidgets" + directory.path);
+   // final File file = File('${directory.path}/$chordsFileName');
+   // if(await file.exists())
+   // {
+    //  print("file of chord notes exists!!!");
+      //istOfChordPointsWidgets = await createNoteWidgetsByChordsNotesJson(topAddition, leftAddition, cameraWidth, cameraHeight);
+   // }
+   // else {
+    //    print("file doesnt exist yet :(");
+   // }
+
     //listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
     //await removeFile(xfile.path);
   }
@@ -64,10 +159,13 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    print("In init state");
+    doSomething();
     super.initState();
     setupCamera();
     WidgetsBinding.instance.addObserver(this);
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+      print("Hiiii");
       setState(() {
         _updateListOfChordPointWidgets();
       });
@@ -84,7 +182,9 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         DeviceOrientation.portraitDown,
       ]);
     }
-
+    /*setState(() {
+      _updateListOfChordPointWidgets();
+    });*/
     //End of Fix for length and not mirroring in tablet
   }
 
@@ -154,7 +254,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
               CircularProgressIndicator(),
               CameraPreview(_controller),
               //Image.asset('assets/images/g70.png'), //Testing static image
-              ...listOfChordPointsWidgets,  //TODO
+              //...listOfChordPointsWidgets,  //TODO
             ],
           ),
         ));
@@ -176,6 +276,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         }
         selectCamera().then((data) {
           _controller = data;
+          controller = data;
         });
       });
     });
@@ -213,32 +314,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
 }
 
 Future<void> removeFile(String filePath) async {
-  final file = io.File(filePath);
+  final file = File(filePath);
   if (file.existsSync()) {
     await file.delete();
   }
-}
-
-Future<List<Widget>> updating(String updatingDetailsStr) async
-{
-  print("A1");
-  dynamic d = jsonDecode(updatingDetailsStr);
-  globals.UpdatingDetails updatingDetails = globals.UpdatingDetails.fromJson(d);
-  final topAddition = updatingDetails.topAddition;
-  print("topAddition!!!!" + topAddition.toString());
-  final leftAddition = updatingDetails.leftAddition;
-  final cameraWidth = updatingDetails.cameraWidth;
-  final cameraHeight = updatingDetails.cameraHeight;
-  final filePath = updatingDetails.filePath;
-  final pathToSaveFrame = updatingDetails.pathToSaveFrame;
-  print("A2");
-  List<Widget> listOfChordPointsWidgets = await createNoteWidgetsByFrame(filePath, pathToSaveFrame, topAddition, leftAddition, cameraWidth, cameraHeight);
-  //listOfChordPointsWidgets = await createNoteWidgetsByFrame(xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-
-  print("A4");
-  await removeFile(filePath);
-  print("A5");
-  return listOfChordPointsWidgets;
-
-  //return listOfChordPointsWidgets;
 }

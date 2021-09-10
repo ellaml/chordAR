@@ -9,15 +9,16 @@ bool isLoggedIn = false;
 @JsonSerializable(nullable: true)
 class UpdatingDetails {
  // RenderBox renderBox;
+
   var cameraHeight;
   var cameraWidth;
   var topAddition;
   var leftAddition;
   var filePath;
   var pathToSaveFrame;
-  //var cameraController;
+  var cameraController;
 
-  UpdatingDetails(screenWidth, cameraHeight, cameraWidth, topAddition, leftAddition, filePath, pathToSaveFrame)
+  UpdatingDetails(cameraController, screenWidth, cameraHeight, cameraWidth, topAddition, leftAddition, filePath, pathToSaveFrame)
   {
   //  this.renderBox = renderBox;
     this.cameraHeight = cameraHeight;
@@ -26,7 +27,7 @@ class UpdatingDetails {
     this.leftAddition = (screenWidth - cameraWidth) / 2; // centered
     this.filePath = filePath;
     this.pathToSaveFrame = pathToSaveFrame;
-   // this.cameraController = cameraController;
+    this.cameraController = cameraController;
   }
 
   Map toJson() => {
