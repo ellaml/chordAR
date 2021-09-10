@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:chaquopy/chaquopy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/globals.dart';
 import 'package:flutter_complete_guide/models/chord.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,7 +41,7 @@ Widget createNoteWidget(
 
 List<Point> createPointsListFromJson(
     dynamic listOfNotesCoordinatesJson, double numOfNotes) {
-  final List<Point> listOfCordNotesCoordinates = <Point>[];
+  final List<Point> listOfChordNotesCoordinates = <Point>[];
 
   for (int i = 0; i < numOfNotes; i++) {
     final dynamic point = listOfNotesCoordinatesJson[i];
@@ -47,24 +49,21 @@ List<Point> createPointsListFromJson(
         convertDynamicToDouble(point[X_JSON_KEY]).toStringAsFixed(2));
     final double y = double.parse(
         convertDynamicToDouble(point[Y_JSON_KEY]).toStringAsFixed(2));
-    listOfCordNotesCoordinates.add(Point(x, y));
+    print("\n createPointsListFromJson    x: " + x.toString() + " y: " + y.toString() + "\n");
+    listOfChordNotesCoordinates.add(Point(x, y));
   }
 
-  return listOfCordNotesCoordinates;
+  return listOfChordNotesCoordinates;
 }
 
 double convertDynamicToDouble(dynamic jsonVal) {
   return double.parse(jsonVal.toString());
 }
 
-List<Point> convJsonToListOfNotesCoordinates(String listOfNotesInfoStr) {
-  final dynamic listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
-
-  final dynamic listOfNotesCoordinatesJson =
-      listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
+List<Point> convJsonToListOfNotesCoordinates(dynamic listOfNotesInfoJson) {
+  final dynamic listOfNotesCoordinatesJson = listOfNotesInfoJson[NOTES_COORDINAES_JSON_KEY];
   final double numOfNotes =
       convertDynamicToDouble(listOfNotesInfoJson[NUM_NOTES_JSON_KEY]);
-
   return createPointsListFromJson(listOfNotesCoordinatesJson, numOfNotes);
 }
 
@@ -98,8 +97,8 @@ Future<void> saveChordPositionInFile(String chordName) async {
   newPath += "position.txt";
   print("newPath:" + newPath);
   final file = File('$newPath');
-  // file.writeAsString(chordName + ',');
-  file.writeAsString(Chord.getChordPosition(chordName));
+  file.writeAsString(chordName + ':' + Chord.getChordPosition(chordName));
+  // file.writeAsString(Chord.getChordPosition(chordName));
   //var syncPath = await newPath;
   //var exists =  await File(syncPath).exists();
   //final contents = await file.readAsString();
@@ -152,8 +151,9 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     double height) async {
   String listOfNotesInfoStr =
       await fetchNotesInfoByPathOfFrame(framePath, chordName);
+  print("\n ================================= FLUTTER =================================\n");
+  print(listOfNotesInfoStr);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
-  print("stringC: " + listOfNotesInfoStr);
   List<Widget> listOfWidgets = [];
   if (listOfNotesInfoStr
       .contains(new RegExp(r'failed', caseSensitive: false))) {
@@ -163,10 +163,15 @@ Future<List<Widget>> createNoteWidgetsByFrame(
   {
     //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
+    print("\n listOfNotes: " + listOfNotesInfoStr + "\n");
+    Map<String, dynamic> listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
+    final String chordName = listOfNotesInfoJson[CHORD_NAME_JSON_KEY];
+    print("################ chordName: " + chordName + "###############");
     final List<Point> listOfNotesCoordinates =
-        convJsonToListOfNotesCoordinates(listOfNotesInfoStr);
+        convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
     listOfWidgets = createNoteWidgetsByListOfPoints(
         listOfNotesCoordinates, top, left, width, height);
+  print("\n ================================= END =================================\n");
 
     //await ImageGallerySaver.saveFile(framePath);
     // print("Gallery: " + fileName.toString());
