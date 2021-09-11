@@ -11,7 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 import 'package:flutter_complete_guide/globals.dart' as globals;
-import '/models/chord.dart' as chord;
+import './models/chord.dart' as chord;
 
 Widget createNoteWidget(Point point, double topAdd, double leftAdd,
     double width, double height, int colorCode) {
@@ -129,7 +129,7 @@ List<Widget> createNoteWidgetsByListOfPoints(String chordName, List<Point> listO
   List<int> bar = Chord.getChordBar(chordName);
   int i = 0;
   for (final Point point in listOfNotesCoordinates) {
-    if (!bar.isEmpty && (bar[0] == i || bar[1] == i))
+    if (false && !bar.isEmpty && (bar[0] == i || bar[1] == i))
     {
         Point<num> pt1 = listOfNotesCoordinates[bar[0]];
         Point<num> pt2 = listOfNotesCoordinates[bar[1]];

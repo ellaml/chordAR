@@ -53,11 +53,11 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
     await removeFile(xfile.path);
   }
 
-  void _saveImgToGallery() async {
-    XFile xfile = await _controller?.takePicture();
-    await ImageGallerySaver.saveFile(xfile.path); //Save Image to Gallery
-    await removeFile(xfile.path);
-  }
+  // void _saveImgToGallery() async {
+  //   XFile xfile = await _controller?.takePicture();
+  //   await ImageGallerySaver.saveFile(xfile.path); //Save Image to Gallery
+  //   await removeFile(xfile.path);
+  // }
 
   @override
   void initState() {
@@ -182,7 +182,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             : Center(
                 child: Stack(key: this._stackKey, children: [
                   Center(child: CameraPreview(_controller)),
-                  //Image.asset('assets/images/01.jpg'), //Testing static image
+                  // Image.asset('assets/images/01.jpg'), //Testing static image
                   ...listOfChordPointsWidgets,
                   ChordTitle(globals.chordTitle),
                   globals.progressionMode ? Container(width:0, height:0) : Positioned(

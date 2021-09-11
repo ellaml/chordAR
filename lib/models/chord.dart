@@ -247,7 +247,7 @@ static List<int> getChordBar(String chordName) {
         //position = "1,3,1,2,1,1";
         break;
       case 'Fm':
-		    bar = [3,5]
+		    bar = [3,5];
         //position = "x,3,0,1,1,1";
         break;
       case 'G':
