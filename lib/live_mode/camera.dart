@@ -29,6 +29,8 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   double screenWidth, screenHeight;
   bool displayList = false;
   final _stackKey = GlobalKey();
+  final _centerKey = GlobalKey();
+  final _cameraKey = GlobalKey();
 
   Timer _timerFrames, _timerProgression;
   List<Widget> listOfChordPointsWidgets = [];
@@ -36,11 +38,24 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   void _updateListOfChordPointWidgets() async {
     final RenderBox renderBox =
         this._stackKey.currentContext.findRenderObject();
-    final cameraHeight = renderBox.size.height;
-    final cameraWidth = renderBox.size.width;
+    //         final RenderBox centerRenderBox =
+    //     this._centerKey.currentContext.findRenderObject();
+    final RenderBox cameraRenderBox =
+        this._cameraKey.currentContext.findRenderObject();
+    final stackHeight = renderBox.size.height;
+    final stackWidth = renderBox.size.width;
+    //         final centerHeight = centerRenderBox.size.height;
+    // final centerWidth = centerRenderBox.size.width;
+    final cameraHeight = cameraRenderBox.size.height;
+    final cameraWidth = cameraRenderBox.size.width;
+    // print("----------------------------------------");
+    // print(" stack highet : " + stackHeight.toString() + " , stack width : " + stackWidth.toString());
+    // print(" center highet : " + centerHeight.toString() + " , center width : " + centerWidth.toString());
+    // print(" camera highet : " + cameraHeight.toString() + " , camera width : " + cameraWidth.toString());
+    // print("----------------------------------------");
 
-    final topAddition = 80.0; //app bar
-    final leftAddition = (this.screenWidth - cameraWidth) / 2; // centered
+    final topAddition = stackHeight - cameraHeight;
+    final leftAddition = (stackWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
     if (globals.progressionMode || globals.isMicTurnedOn) {
       if (globals.chord != null && globals.chord != "") {
@@ -184,7 +199,7 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             ? Container(color: Colors.black)
             : Center(
                 child: Stack(key: this._stackKey, children: [
-                  Center(child: CameraPreview(_controller)),
+                  Center(key: _centerKey ,child: Container(key: _cameraKey, child:CameraPreview(_controller))),
                   //Image.asset('assets/images/01.jpg'), //Testing static image
                   ...listOfChordPointsWidgets,
                   ChordTitle(globals.chordTitle),

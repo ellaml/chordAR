@@ -16,7 +16,7 @@ Widget createNoteWidget(Point point, double topAdd, double leftAdd,
     double width, double height, int colorCode) {
   print(colorCode);
   return Positioned(
-    left: point.x.toDouble() * width, //new_left,
+    left: point.x.toDouble() * width + leftAdd, //new_left,
     top: point.y.toDouble() *
         height, //new_top, // change - its always right after the appbar
     child: Container(
