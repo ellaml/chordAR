@@ -36,37 +36,22 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
   List<Widget> listOfChordPointsWidgets = [];
 
   void _updateListOfChordPointWidgets() async {
-    final RenderBox renderBox =
-        this._stackKey.currentContext.findRenderObject();
-    //         final RenderBox centerRenderBox =
-    //     this._centerKey.currentContext.findRenderObject();
-    final RenderBox cameraRenderBox =
-        this._cameraKey.currentContext.findRenderObject();
+    final RenderBox renderBox = this._stackKey.currentContext.findRenderObject();
+    final RenderBox cameraRenderBox = this._cameraKey.currentContext.findRenderObject();
     final stackHeight = renderBox.size.height;
     final stackWidth = renderBox.size.width;
-    //         final centerHeight = centerRenderBox.size.height;
-    // final centerWidth = centerRenderBox.size.width;
+
     final cameraHeight = cameraRenderBox.size.height;
     final cameraWidth = cameraRenderBox.size.width;
-    // print("----------------------------------------");
-    // print(" stack highet : " + stackHeight.toString() + " , stack width : " + stackWidth.toString());
-    // print(" center highet : " + centerHeight.toString() + " , center width : " + centerWidth.toString());
-    // print(" camera highet : " + cameraHeight.toString() + " , camera width : " + cameraWidth.toString());
-    // print("----------------------------------------");
 
     final topAddition = stackHeight - cameraHeight;
     final leftAddition = (stackWidth - cameraWidth) / 2; // centered
     XFile xfile = await _controller?.takePicture();
     if (globals.progressionMode || globals.isMicTurnedOn) {
       if (globals.chord != null && globals.chord != "") {
-        //print("The chord is: " + globals.chord);
         listOfChordPointsWidgets = await createNoteWidgetsByFrame(globals.chord,
             xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight, this.widget.colorCode);
       }
-      // } else {
-      //   listOfChordPointsWidgets = await createNoteWidgetsByFrame("A",
-      //       xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight);
-      // }
     }
     await removeFile(xfile.path);
   }
@@ -103,19 +88,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
         _updateListOfChordPointWidgets();
       });
     });
-    print("COLORRRRRRRRRRRR: " + this.widget.colorCode.toString());
-    //_timer = Timer.periodic(Duration(seconds: 10), (Timer t) {
-    //  _saveImgToGallery();
-    //});
-    //
-    //Fix for length and not mirroring in tablet
     if (_cameraType == CameraType.TWO) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
         DeviceOrientation.portraitDown,
       ]);
     }
-
     //End of Fix for length and not mirroring in tablet
   }
 
