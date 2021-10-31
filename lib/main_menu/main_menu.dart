@@ -54,7 +54,6 @@ class MainMenu extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                   MenuButton(
-                      //ChordBankScreen(),
                       ChordBankScreen.routeName,
                       ('assets/icons/open-book' +
                           (screenData.isBigDevice ? '128' : '64') +
@@ -64,7 +63,6 @@ class MainMenu extends StatelessWidget {
                       buttonWidth),
                   MenuButton(
                       LiveModeScreen.routeName,
-                      //LiveModeScreen(),
                       ('assets/icons/camera' +
                           (screenData.isBigDevice ? '128' : '64') +
                           '.png'),
@@ -73,7 +71,6 @@ class MainMenu extends StatelessWidget {
                       buttonWidth),
                   MenuButton(
                       ProgressionsScreen.routeName,
-                      //ProgressionsScreen(),
                       ('assets/icons/process' +
                           (screenData.isBigDevice ? '128' : '64') +
                           '.png'),

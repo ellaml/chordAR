@@ -46,7 +46,6 @@ class _ScrollableListState extends State<ScrollableList> {
                 offset: Offset(2, 2))
           ],
           borderRadius: BorderRadius.circular(10),
-          //boxShadow: [BoxShadow(color: appColors.lightPurpleShadow, blurRadius: 1, offset: Offset(2,2))],
           border: Border.all(color: appColors.borderPurple, width: 2),
         ),
         child: Column(children: [

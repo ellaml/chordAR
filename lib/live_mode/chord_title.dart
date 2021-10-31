@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/utils.dart';
 import '../app_colors.dart' as appColors;
 
 class ChordTitle extends StatefulWidget {
@@ -17,7 +16,6 @@ class ChordTitle extends StatefulWidget {
 class _ChordTitle extends State<ChordTitle> {
   @override
   Widget build(BuildContext context) {
-    ScreenData screenData = ScreenData(context);
     if (widget.title != "") {
       return Positioned(
           left: 100,

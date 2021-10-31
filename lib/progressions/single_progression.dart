@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:flutter_complete_guide/live_mode/camera.dart';
-import 'package:flutter_complete_guide/live_mode/live_mode_screen.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import '../progressions/edit_progression_screen.dart';
 import '../providers/progressions.dart';
@@ -42,7 +41,6 @@ class SingleProgression extends StatelessWidget {
                 }));
               },
               child: Container(
-                //width: width - 100,
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Flexible(
                     child: Text(buttonLabel,
@@ -60,8 +58,6 @@ class SingleProgression extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () async {
-                    UserPreferences prefs = UserPreferences();
-                    int interval = await prefs.getDefaultInterval();
                     Navigator.of(context).pushNamed(
                         EditProgressionScreen.routeName,
                         arguments: [id, null]);

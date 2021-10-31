@@ -6,17 +6,11 @@ class MenuButton extends StatelessWidget {
   final String buttonLabel;
   final String imgSrc;
   final String routeName;
-  // final Widget route;
   final double height, width;
 
   void changeScreen(BuildContext context, int colorCode) {
     Navigator.of(context).pushNamed(
       this.routeName, arguments: colorCode);
-    // Navigator.push(context, MaterialPageRoute(
-    //   builder: (context) {
-    //     return this.route;
-    //   },
-    // ));
   }
 
   MenuButton(

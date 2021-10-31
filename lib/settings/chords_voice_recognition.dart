@@ -40,7 +40,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
         );
   }
   String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
-  String chords_reg(String s){
+  String chordsReg(String s){
     s = s.toLowerCase();
     s = s.replaceAll('.', '');
     s = s.replaceAll('-', '');
@@ -76,7 +76,7 @@ class _SpeechScreenState extends State<SpeechScreen> {
         _speech.listen(
           onResult: (val) => setState(() {
             print("before change: " + val.recognizedWords);
-            _text = chords_reg(val.recognizedWords);
+            _text = chordsReg(val.recognizedWords);
             print("After change: " + _text);
             if(chordNamesList.contains(_text))
             {

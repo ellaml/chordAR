@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/chord_bank/chord_bank_screen.dart';
 import 'package:flutter_complete_guide/live_mode/live_mode_screen.dart';
 import 'package:flutter_complete_guide/progressions/progressions_screen.dart';
-import 'package:flutter_complete_guide/providers/user_preferences.dart';
 import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'main_menu/main_menu.dart';

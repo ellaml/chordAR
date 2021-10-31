@@ -81,10 +81,3 @@ class Progressions with ChangeNotifier {
     return chordsString.substring(1, chordsString.length - 1);
   }
 }
-
-/* mock progressions 
-    Progression(id: 1, chords:[ChordOption("Am"), ChordOption("F"), ChordOption("C"), ChordOption("G")], interval: 4, name: "Basic"),
-    Progression(id: 2, chords:[ChordOption("E"), ChordOption("B"), ChordOption("A"), ChordOption("D")], interval: 3),
-    Progression(id: 3, chords:[ChordOption("Em"), ChordOption("C"), ChordOption("D7"), ChordOption("A")], interval: 5, name:"Hey you"),
-    Progression(id: 4, chords:[ChordOption("F#m"), ChordOption("Cm"), ChordOption("Bm"), ChordOption("B7")], interval: 4, name:"Boom")
-    */

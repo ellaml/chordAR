@@ -162,7 +162,6 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     globals.chordTitle = chordName;
     final List<Point> listOfNotesCoordinates =
         convJsonToListOfNotesCoordinates(listOfNotesInfoJson);
-    UserPreferences prefs = UserPreferences();
     int colorCodeForNotesWidgets = colorCode;
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates, top,
         left, width, height, colorCodeForNotesWidgets);

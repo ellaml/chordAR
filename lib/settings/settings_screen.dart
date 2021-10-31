@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/globals.dart';
-// import 'package:flutter_complete_guide/providers/user_preferences.dart';
 import 'package:flutter_complete_guide/utils.dart';
 import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../app_colors.dart' as appColors;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'user_preferences_shared.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,8 +19,8 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreen extends State<SettingsScreen> {
   final _form = GlobalKey<FormState>();
   UserPreferences prefs = UserPreferences();
-  int _editedColor = null;
-  int _editedInterval = null;
+  int _editedColor = 0;
+  int _editedInterval = 0;
 
   var _initValues = {'color': '', 'interval': '5'};
 
@@ -93,7 +89,6 @@ class _SettingsScreen extends State<SettingsScreen> {
         );
 
     ScreenData screenData = ScreenData(context);
-    double intervalBoxWidth = screenData.isBigDevice ? 90 : 60;
     double intervalBoxHeight = screenData.isBigDevice ? 70 : 50;
     double fontSize = screenData.isBigDevice ? 26 : 18;
     return FocusWatcher(
@@ -159,9 +154,6 @@ class _SettingsScreen extends State<SettingsScreen> {
                               textInputAction: TextInputAction.next,
                               keyboardType: TextInputType.number,
                               validator: (value) {
-                                if (value.isEmpty) {
-                                  // TODO: Add error
-                                }
                                 return null;
                               },
                               onSaved: (value) {

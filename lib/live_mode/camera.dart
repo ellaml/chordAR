@@ -7,7 +7,6 @@ import 'package:flutter_complete_guide/chord_notes.dart';
 import 'package:flutter_complete_guide/live_mode/scrollable_list.dart';
 import 'package:flutter_complete_guide/settings/chords_voice_recognition.dart';
 import 'package:flutter_complete_guide/utils.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:flutter_complete_guide/globals.dart' as globals;
 import 'package:wakelock/wakelock.dart';
 import '../app_colors.dart' as appColors;
@@ -53,12 +52,6 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             xfile.path, topAddition, leftAddition, cameraWidth, cameraHeight, this.widget.colorCode);
       }
     }
-    await removeFile(xfile.path);
-  }
-
-  void _saveImgToGallery() async {
-    XFile xfile = await _controller?.takePicture();
-    await ImageGallerySaver.saveFile(xfile.path); //Save Image to Gallery
     await removeFile(xfile.path);
   }
 
@@ -178,15 +171,12 @@ class _CameraState extends State<Camera> with WidgetsBindingObserver {
             : Center(
                 child: Stack(key: this._stackKey, children: [
                   Center(key: _centerKey ,child: Container(key: _cameraKey, child:CameraPreview(_controller))),
-                  //Image.asset('assets/images/01.jpg'), //Testing static image
                   ...listOfChordPointsWidgets,
                   ChordTitle(globals.chordTitle),
                   globals.progressionMode ? Container(width:0, height:0) : Positioned(
                     top: 30,
                     right: 100,
                     child:Container(
-                     // margin: EdgeInsets.fromLTRB(0, 30, 100, 30),
-                      //alignment: Alignment.topRight,
                       child: this.displayList
                           ? Column(children: [
                               ScrollableList(

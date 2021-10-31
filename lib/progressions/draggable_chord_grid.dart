@@ -13,7 +13,6 @@ class DraggableChordGrid extends StatefulWidget {
   final double chordBoxWidth, chordBoxHeight;
   final chordsInRow;
   
-  //TODO: move to state if better
   DraggableChordGrid(chords, this.chordBoxWidth, this.chordBoxHeight,
       this.deleteChord, this.chordsInRow) {
     this.chords = chords;

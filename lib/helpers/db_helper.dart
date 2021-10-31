@@ -4,8 +4,6 @@ import 'package:sqflite/sqflite.dart' as sql;
 class DBHelper {
   static Future<sql.Database> database() async {
     final dbPath = await sql.getDatabasesPath();
-     //final joinedPath = path.join(dbPath, 'progressions.db');
-    // await sql.deleteDatabase(joinedPath);
     
     print(dbPath);
     final createdDb = sql.openDatabase(path.join(dbPath, 'progressions.db'),

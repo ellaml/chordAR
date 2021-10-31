@@ -220,9 +220,6 @@ class _EditProgressionScreen extends State<EditProgressionScreen> {
                                     keyboardType: TextInputType.number,
                                     focusNode: _intervalFocusNode,
                                     validator: (value) {
-                                      if (value.isEmpty) {
-                                        // TODO: Add error
-                                      }
                                       return null;
                                     },
                                     onSaved: (value) {
