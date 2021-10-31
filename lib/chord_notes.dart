@@ -8,7 +8,6 @@ import 'package:flutter_complete_guide/models/chord.dart';
 import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import './constants.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import './app_colors.dart' as appColors;
 import 'package:flutter_complete_guide/globals.dart' as globals;
 
@@ -51,11 +50,7 @@ List<Point> createPointsListFromJson(
         convertDynamicToDouble(point[X_JSON_KEY]).toStringAsFixed(2));
     final double y = double.parse(
         convertDynamicToDouble(point[Y_JSON_KEY]).toStringAsFixed(2));
-    print("\n createPointsListFromJson    x: " +
-        x.toString() +
-        " y: " +
-        y.toString() +
-        "\n");
+    print("\n createPointsListFromJson    x: " + x.toString() + " y: " + y.toString() + "\n");
     listOfChordNotesCoordinates.add(Point(x, y));
   }
 
@@ -94,21 +89,17 @@ Future<String> getBasePathToSaveFrame() async {
 
 Future<String> getPathToSaveFrame() async {
   String newPath = await getBasePathToSaveFrame();
-  newPath += "c.jpeg";
+  newPath += FRAME_FILE_NAME;
   print("newPath:" + newPath);
   return newPath;
 }
 
 Future<void> saveChordPositionInFile(String chordName) async {
   String newPath = await getBasePathToSaveFrame();
-  newPath += "position.txt";
+  newPath += POSITION_FILE_NAME;
   print("newPath:" + newPath);
   final file = File('$newPath');
   file.writeAsString(chordName + ':' + Chord.getChordPosition(chordName));
-  // file.writeAsString(Chord.getChordPosition(chordName));
-  //var syncPath = await newPath;
-  //var exists =  await File(syncPath).exists();
-  //final contents = await file.readAsString();
   return;
 }
 
@@ -162,13 +153,9 @@ Future<List<Widget>> createNoteWidgetsByFrame(
       await fetchNotesInfoByPathOfFrame(framePath, chordName);
   listOfNotesInfoStr = listOfNotesInfoStr.replaceAll("\n", " ");
   List<Widget> listOfWidgets = [];
-  if (listOfNotesInfoStr
-      .contains(new RegExp(r'failed', caseSensitive: false))) {
+  if (listOfNotesInfoStr.contains(new RegExp(r'failed', caseSensitive: false))) {
     print("failed");
-    //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.red, 1));
-  } else // TODO: Need to add after the image processing is ready
-  {
-    //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.green, 1));
+  } else {
     listOfNotesInfoStr = cleanStringForJson(listOfNotesInfoStr);
     Map<String, dynamic> listOfNotesInfoJson = json.decode(listOfNotesInfoStr);
     final String chordName = listOfNotesInfoJson[CHORD_NAME_JSON_KEY];
@@ -180,20 +167,6 @@ Future<List<Widget>> createNoteWidgetsByFrame(
     listOfWidgets = createNoteWidgetsByListOfPoints(listOfNotesCoordinates, top,
         left, width, height, colorCodeForNotesWidgets);
 
-    //await ImageGallerySaver.saveFile(framePath);
-    // print("Gallery: " + fileName.toString());
-    // print("frame Path: " + framePath);
   }
-  //await ImageGallerySaver.saveFile(framePath);
-  //String pathToSaveFrame = await getPathToSaveFrame();
-  //listOfWidgets.add(createTextWidget(pathToSaveFrame, Colors.blue, 30));
-
-  //listOfWidgets.add(createTextWidget(listOfNotesInfoStr, Colors.blue, 40));
   return listOfWidgets;
 }
-
-/*List<Widget> createNoteWidgetsByFrame(String framePath)
-{
-  return <Widget>[createNoteWidget(Point(1,2)), createNoteWidget((Point(50,40)))];
-}*/
-
