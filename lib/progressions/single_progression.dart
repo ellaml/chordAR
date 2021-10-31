@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/settings/user_preferences_shared.dart';
 import 'package:flutter_complete_guide/live_mode/camera.dart';
 import 'package:flutter_complete_guide/live_mode/live_mode_screen.dart';
+import 'package:flutter_complete_guide/utils.dart';
 import '../progressions/edit_progression_screen.dart';
 import '../providers/progressions.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ class SingleProgression extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData screenData = ScreenData(context);
     return Container(
         width: width,
         height: height,
@@ -40,14 +42,19 @@ class SingleProgression extends StatelessWidget {
                 }));
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Text(buttonLabel,
-                    style: TextStyle(
-                        fontSize: 0.3 * height,
-                        fontWeight: FontWeight.bold,
-                        color: appColors.buttonText),
-                    textAlign: TextAlign.center),
-              )),
+                //width: width - 100,
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Flexible(
+                    child: Text(buttonLabel,
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: TextStyle(
+                            fontSize: (screenData.isLandscape? 0.3 : 0.25) * height,
+                            fontWeight: FontWeight.bold,
+                            color: appColors.buttonText),
+                        textAlign: TextAlign.center),
+                  ))),
           Row(
             children: [
               IconButton(
@@ -57,7 +64,7 @@ class SingleProgression extends StatelessWidget {
                     int interval = await prefs.getDefaultInterval();
                     Navigator.of(context).pushNamed(
                         EditProgressionScreen.routeName,
-                        arguments:[id, null]);
+                        arguments: [id, null]);
                   }),
               IconButton(
                   icon: Icon(Icons.delete),

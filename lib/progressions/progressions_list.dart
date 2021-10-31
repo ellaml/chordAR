@@ -38,7 +38,7 @@ class _ProgressionsListState extends State<ProgressionsList> {
                     "Add new Progression",
                     style: TextStyle(
                         fontFamily: 'BankGothicLight',
-                        fontSize: 0.05 * screenData.screenHeight,
+                        fontSize: (screenData.isLandscape? 0.05 : 0.028) * screenData.screenHeight,
                         color: Colors.white),
                   ))
             ])));
